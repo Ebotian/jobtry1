@@ -439,3 +439,341 @@ This structure follows modern Node.js architecture patterns with clear separatio
 7. **Utils**: House reusable utility functions
 
 Let me know if you'd like to proceed with this structure, or if you want any adjustments before we start implementing the backend step by step.
+
+# 智能爬虫与AI分析系统 - 前端开发方案
+
+基于您提供的界面设计和需求，我为您准备了详细的前端开发计划。以下是组织结构设计和具体实施步骤：
+
+## 组件架构设计图
+
+```mermaid
+flowchart TB
+  subgraph "应用结构"
+    App[App.tsx]
+    Router[Router 路由管理]
+    Store[Zustand 状态管理]
+
+    App --> Router
+    App --> Store
+
+    subgraph "布局组件"
+      Layout[Layout 主布局]
+      Sidebar[Sidebar 侧边栏]
+      Header[Header 顶部栏]
+      Content[Content 内容区]
+    end
+
+    subgraph "功能组件"
+      ChatModule[对话模块]
+      ResultModule[结果展示模块]
+      ChartModule[图表模块]
+      TaskModule[任务管理模块]
+    end
+
+    subgraph "UI组件库"
+      AntDesign[Ant Design 组件]
+      ECharts[ECharts 图表]
+      CustomUI[自定义UI组件]
+    end
+
+    Router --> Layout
+    Layout --> Sidebar
+    Layout --> Header
+    Layout --> Content
+
+    Content --> ChatModule
+    Content --> ResultModule
+    Content --> ChartModule
+    Content --> TaskModule
+
+    ChatModule --> AntDesign
+    ResultModule --> AntDesign
+    ChartModule --> ECharts
+    TaskModule --> AntDesign
+
+    Store -.-> ChatModule
+    Store -.-> ResultModule
+    Store -.-> ChartModule
+    Store -.-> TaskModule
+  end
+```
+
+## 组件层次结构
+
+```mermaid
+flowchart TD
+  App[App 根组件]
+  Layout[Layout 布局组件]
+  Sidebar[Sidebar 侧边栏]
+
+  ChatContainer[ChatContainer 对话容器]
+  ChatHeader[ChatHeader 对话头部]
+  MessageList[MessageList 消息列表]
+  MessageItem[MessageItem 消息项]
+  ChatInput[ChatInput 输入框]
+
+  SummaryCard[SummaryCard 摘要卡片]
+
+  ChartContainer[ChartContainer 图表容器]
+  LeftChart[LeftChart 左侧图表]
+  RightChart[RightChart 右侧图表]
+
+  ControlPanel[ControlPanel 控制面板]
+  Slider[SliderControl 滑动器]
+  Switch[SwitchControl 开关]
+  BlockchainTag[BlockchainTag 区块链标签]
+
+  App --> Layout
+  Layout --> Sidebar
+  Layout --> ChatContainer
+  Layout --> SummaryCard
+  Layout --> ChartContainer
+  Layout --> ControlPanel
+
+  ChatContainer --> ChatHeader
+  ChatContainer --> MessageList
+  ChatContainer --> ChatInput
+  MessageList --> MessageItem
+
+  ChartContainer --> LeftChart
+  ChartContainer --> RightChart
+
+  ControlPanel --> Slider
+  ControlPanel --> Switch
+  ControlPanel --> BlockchainTag
+```
+
+## 状态管理结构
+
+```mermaid
+flowchart LR
+  subgraph "全局状态 (Zustand)"
+    AppStore[应用状态]
+    UserStore[用户状态]
+    TaskStore[任务状态]
+    ChatStore[对话状态]
+    ResultStore[结果状态]
+  end
+
+  subgraph "API服务"
+    AuthAPI[认证API]
+    TaskAPI[任务API]
+    ChatAPI[对话API]
+    AIAnalysisAPI[AI分析API]
+  end
+
+  AuthAPI --> UserStore
+  TaskAPI --> TaskStore
+  ChatAPI --> ChatStore
+  AIAnalysisAPI --> ResultStore
+
+  UserStore --> Components1[UI组件]
+  TaskStore --> Components2[UI组件]
+  ChatStore --> Components3[UI组件]
+  ResultStore --> Components4[UI组件]
+```
+
+## 开发实施计划
+
+### 1. 初始化项目与基础配置
+
+- [x] 创建 React + Vite 项目
+- [ ] 配置 TypeScript、ESLint、Prettier
+- [ ] 安装必要依赖 (Ant Design、ECharts、Zustand等)
+- [ ] 创建项目目录结构
+
+```bash
+mkdir -p src/{components,layouts,pages,store,services,hooks,utils,styles,assets}
+touch src/styles/tailwind.css
+touch src/styles/variables.scss
+```
+
+### 2. 实现布局组件
+
+- [ ] 创建主布局组件 `layouts/MainLayout.tsx`
+- [ ] 实现侧边栏导航 `components/Sidebar.tsx`
+- [ ] 设计暗色主题样式
+
+### 3. 实现对话模块
+
+- [ ] 创建对话容器 `components/chat/ChatContainer.tsx`
+- [ ] 实现消息列表 `components/chat/MessageList.tsx`
+- [ ] 实现消息气泡 `components/chat/MessageItem.tsx`
+- [ ] 实现输入框 `components/chat/ChatInput.tsx`
+
+### 4. 实现摘要卡片
+
+- [ ] 创建摘要卡片组件 `components/SummaryCard.tsx`
+- [ ] 实现加载状态和占位内容
+
+### 5. 实现图表模块
+
+- [ ] 创建图表容器 `components/charts/ChartContainer.tsx`
+- [ ] 实现左侧柱状图 `components/charts/BarChartLeft.tsx`
+- [ ] 实现右侧柱状图 `components/charts/BarChartRight.tsx`
+
+### 6. 实现控制面板
+
+- [ ] 创建控制面板容器 `components/controls/ControlPanel.tsx`
+- [ ] 实现滑动控制器 `components/controls/SliderControl.tsx`
+- [ ] 实现开关控制器 `components/controls/SwitchControl.tsx`
+- [ ] 实现区块链标签 `components/controls/BlockchainTag.tsx`
+
+### 7. 状态管理与API集成
+
+- [ ] 创建Zustand状态库 `store/index.ts`
+- [ ] 实现对话状态管理 `store/chatStore.ts`
+- [ ] 实现结果状态管理 `store/resultStore.ts`
+- [ ] 封装API请求服务 `services/api.ts`
+
+## 优先实现的组件代码示例
+
+### 1. 主应用组件 (App.tsx)
+
+```tsx
+// src/App.tsx
+import { useState } from 'react';
+import MainLayout from './layouts/MainLayout';
+import './styles/global.css';
+
+function App() {
+  return (
+    <div className="app dark-theme">
+      <MainLayout />
+    </div>
+  );
+}
+
+export default App;
+```
+
+### 2. 主布局组件 (MainLayout.tsx)
+
+```tsx
+// src/layouts/MainLayout.tsx
+import { Layout } from 'antd';
+import Sidebar from '../components/Sidebar';
+import ChatContainer from '../components/chat/ChatContainer';
+import SummaryCard from '../components/SummaryCard';
+import ChartContainer from '../components/charts/ChartContainer';
+import ControlPanel from '../components/controls/ControlPanel';
+
+const { Sider, Content } = Layout;
+
+const MainLayout = () => {
+  return (
+    <Layout className="h-screen">
+      <Sider width={70} theme="dark" className="sidebar">
+        <Sidebar />
+      </Sider>
+      <Content className="bg-[#1a1a2e] p-4">
+        <div className="flex flex-col h-full gap-4">
+          <div className="flex-1">
+            <ChatContainer />
+          </div>
+          <SummaryCard />
+          <div className="flex gap-4 h-64">
+            <ChartContainer />
+          </div>
+          <ControlPanel />
+        </div>
+      </Content>
+    </Layout>
+  );
+};
+
+export default MainLayout;
+```
+
+### 3. 对话容器组件 (ChatContainer.tsx)
+
+```tsx
+// src/components/chat/ChatContainer.tsx
+import { useState } from 'react';
+import ChatHeader from './ChatHeader';
+import MessageList from './MessageList';
+import ChatInput from './ChatInput';
+import { Message } from '../../types';
+
+const ChatContainer = () => {
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      type: 'ai',
+      content: '您好！我可以协助您分析数据，生成报告，甚至进行预测分析。',
+      timestamp: new Date()
+    }
+  ]);
+
+  const handleSendMessage = (content: string) => {
+    // 添加用户消息
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      type: 'user',
+      content,
+      timestamp: new Date()
+    };
+    setMessages([...messages, userMessage]);
+
+    // 模拟AI响应
+    setTimeout(() => {
+      const aiMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: '我正在处理您的请求...',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, aiMessage]);
+    }, 1000);
+  };
+
+  return (
+    <div className="flex flex-col h-full bg-[#242438] rounded-lg overflow-hidden">
+      <ChatHeader />
+      <MessageList messages={messages} />
+      <ChatInput onSend={handleSendMessage} />
+    </div>
+  );
+};
+
+export default ChatContainer;
+```
+
+## 开发里程碑计划
+
+```mermaid
+gantt
+    title 前端开发里程碑
+    dateFormat  YYYY-MM-DD
+    section 基础阶段
+    项目初始化与配置            :a1, 2025-04-27, 1d
+    基础布局实现                :a2, after a1, 2d
+    section 功能阶段
+    对话模块实现                :b1, after a2, 3d
+    摘要卡片实现                :b2, after a2, 1d
+    图表模块实现                :b3, after b2, 2d
+    控制面板实现                :b4, after b2, 2d
+    section 集成阶段
+    状态管理集成                :c1, after b1, 2d
+    API服务集成                 :c2, after c1, 2d
+    section 优化阶段
+    UI/UX优化                   :d1, after c2, 2d
+    性能优化                    :d2, after d1, 1d
+```
+
+## 后续开发建议
+
+1. **渐进实现** - 先搭建主体框架，再丰富细节
+2. **组件驱动开发** - 每个组件独立开发测试
+3. **状态与UI分离** - 使用Zustand管理全局状态
+4. **响应式设计** - 兼顾不同设备尺寸
+
+通过以上计划，您可以系统性地构建出所需的AI交互平台前端界面。每个组件都有明确的职责和定义，确保整体架构的可维护性和可扩展性。
+
+## 下一步建议
+
+1. 设置项目基础配置文件
+2. 完成布局组件的实现
+3. 实现核心对话模块
+
+您希望从哪一部分开始实现？
