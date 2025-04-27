@@ -319,15 +319,45 @@ chat-input button:active {
   box-shadow: var(--box-shadow);
 }
 
-.summary-card h3 {
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: var(--spacing-sm);
+}
+
+.summary-card h3 {
+  margin-bottom: 0;
   color: var(--text-light);
   font-size: 1.1rem;
+}
+
+.summary-content {
+  position: relative;
 }
 
 .summary-card p {
   color: var(--text-dim);
   font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.copy-button {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-dim);
+  border-radius: var(--border-radius);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+}
+
+.copy-button:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-light);
+  border-color: var(--accent-color);
 }
 
 /* 可视化状态变化 */
