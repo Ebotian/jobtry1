@@ -10,11 +10,10 @@ import {
 	Dataset,
 } from "crawlee";
 import { RequestQueue, RequestList } from "crawlee";
-import playwright from "playwright";
 import { promises as fs } from "fs";
 import path from "path";
 import logger from "../utils/logger.js";
-import { config } from "../config/env.js";
+import  config  from "../config/env.js";
 
 /**
  * 网站适配器基类 - 为不同网站提供特定的抓取逻辑

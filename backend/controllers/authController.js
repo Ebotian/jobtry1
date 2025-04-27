@@ -10,12 +10,7 @@ import crypto from "crypto";
 import User from "../models/User.js";
 import { sendEmail } from "../utils/helpers.js";
 import logger from "../utils/logger.js";
-import {
-	JWT_SECRET,
-	JWT_EXPIRES_IN,
-	JWT_REFRESH_EXPIRES_IN,
-} from "../config/env.js";
-
+import config from "../config/env.js";
 /**
  * 用户注册
  * @async
@@ -176,7 +171,7 @@ export const refreshToken = async (req, res) => {
 		// 验证刷新令牌
 		let decoded;
 		try {
-			decoded = jwt.verify(refreshToken, JWT_SECRET);
+			decoded = jwt.verify(refreshToken, config.JWT_SECRET);
 		} catch (error) {
 			return res.status(401).json({
 				success: false,
@@ -351,9 +346,9 @@ export const getCurrentUser = async (req, res) => {
  * @returns {string} JWT访问令牌
  */
 const generateAccessToken = (userId) => {
-	return jwt.sign({ id: userId }, JWT_SECRET, {
-		expiresIn: JWT_EXPIRES_IN,
-	});
+  return jwt.sign({ id: userId }, config.JWT_SECRET, {
+    expiresIn: config.JWT_EXPIRE,
+  });
 };
 
 /**
@@ -363,7 +358,8 @@ const generateAccessToken = (userId) => {
  * @returns {string} JWT刷新令牌
  */
 const generateRefreshToken = (userId) => {
-	return jwt.sign({ id: userId }, JWT_SECRET, {
-		expiresIn: JWT_REFRESH_EXPIRES_IN,
-	});
+  return jwt.sign({ id: userId }, config.JWT_SECRET, {
+    // 可以设置更长的刷新令牌过期时间，例如3倍的访问令牌过期时间
+    expiresIn: config.JWT_EXPIRE,
+  });
 };

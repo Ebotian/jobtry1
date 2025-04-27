@@ -354,8 +354,109 @@ export const taskValidation = {
 	}),
 };
 
+/**
+ * 任务验证中间件 - 根据请求类型选择适当的验证规则
+ * @param {Object} req - Express请求对象
+ * @param {Object} res - Express响应对象
+ * @param {Function} next - Express下一个中间件函数
+ */
+export const validateTask = (req, res, next) => {
+  const schema = req.method === 'POST'
+    ? taskValidation.createTask
+    : taskValidation.updateTask;
+
+  return validate(schema)(req, res, next);
+};
+
+// 在文件末尾添加以下代码（在 export default {} 之前）
+
+/**
+ * 用户注册验证中间件
+ * @param {Object} req - Express请求对象
+ * @param {Object} res - Express响应对象
+ * @param {Function} next - Express下一个中间件函数
+ */
+export const validateRegister = (req, res, next) => {
+  return validate(userValidation.register)(req, res, next);
+};
+
+/**
+ * 用户登录验证中间件
+ * @param {Object} req - Express请求对象
+ * @param {Object} res - Express响应对象
+ * @param {Function} next - Express下一个中间件函数
+ */
+export const validateLogin = (req, res, next) => {
+  return validate(userValidation.login)(req, res, next);
+};
+
+/**
+ * 密码重置验证中间件
+ * @param {Object} req - Express请求对象
+ * @param {Object} res - Express响应对象
+ * @param {Function} next - Express下一个中间件函数
+ */
+export const validatePasswordReset = (req, res, next) => {
+  // 创建密码重置验证schema
+  const resetPasswordSchema = Joi.object({
+    token: Joi.string().required().messages({
+      'string.base': '重置令牌必须是字符串',
+      'string.empty': '重置令牌不能为空',
+      'any.required': '重置令牌字段为必填项'
+    }),
+    newPassword: Joi.string()
+      .min(6)
+      .max(30)
+      .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])'))
+      .required()
+      .messages({
+        'string.base': '新密码必须是字符串',
+        'string.empty': '新密码不能为空',
+        'string.min': '新密码至少需要6个字符',
+        'string.max': '新密码不能超过30个字符',
+        'string.pattern.base': '新密码必须包含至少一个小写字母、一个大写字母和一个数字',
+        'any.required': '新密码字段为必填项'
+      }),
+    passwordConfirm: Joi.string()
+      .valid(Joi.ref('newPassword'))
+      .required()
+      .messages({
+        'string.base': '确认密码必须是字符串',
+        'any.only': '确认密码必须与新密码匹配',
+        'any.required': '确认密码字段为必填项'
+      })
+  });
+
+  return validate(resetPasswordSchema)(req, res, next);
+};
+
+/**
+ * 忘记密码验证中间件
+ * @param {Object} req - Express请求对象
+ * @param {Object} res - Express响应对象
+ * @param {Function} next - Express下一个中间件函数
+ */
+export const validateForgotPassword = (req, res, next) => {
+  const forgotPasswordSchema = Joi.object({
+    email: Joi.string().trim().email().required().messages({
+      'string.base': '邮箱必须是字符串',
+      'string.empty': '邮箱不能为空',
+      'string.email': '邮箱格式无效',
+      'any.required': '邮箱字段为必填项'
+    })
+  });
+
+  return validate(forgotPasswordSchema)(req, res, next);
+};
+
+// 更新默认导出
 export default {
-	validate,
-	userValidation,
-	taskValidation,
+  validate,
+  userValidation,
+  taskValidation,
+  validateTask,
+  validateRegister,
+  validateLogin,
+  validatePasswordReset,
+  validateForgotPassword
 };

@@ -373,11 +373,49 @@ export const validationUtils = {
 	},
 };
 
-export default {
-	stringUtils,
-	dateUtils,
-	objectUtils,
-	responseUtils,
-	securityUtils,
-	validationUtils,
+// 添加以下代码到 helpers.js 文件中的适当位置
+
+/**
+ * 邮件相关工具
+ */
+export const emailUtils = {
+  /**
+   * 发送电子邮件
+   * @param {Object} options - 邮件选项
+   * @param {string} options.to - 收件人邮箱
+   * @param {string} options.subject - 邮件主题
+   * @param {string} options.text - 邮件文本内容
+   * @param {string} options.html - 邮件HTML内容（可选）
+   * @returns {Promise<Object>} 发送结果
+   */
+  sendEmail: async (options) => {
+    try {
+      logger.info(`准备发送邮件到 ${options.to}`);
+
+      // 这里应该实现实际的邮件发送逻辑
+      // 例如使用 nodemailer 等库
+
+      // 这是一个模拟实现，实际应用中需要替换为真正的邮件发送代码
+      logger.info(`邮件发送成功: ${options.subject}`);
+      return { success: true, message: '邮件发送成功' };
+    } catch (error) {
+      logger.error(`邮件发送失败: ${error.message}`);
+      throw new Error(`邮件发送失败: ${error.message}`);
+    }
+  }
 };
+
+// 将 emailUtils 添加到默认导出
+export default {
+  stringUtils,
+  dateUtils,
+  objectUtils,
+  responseUtils,
+  securityUtils,
+  validationUtils,
+  emailUtils  // 添加新的工具组
+};
+
+// 添加直接导出
+export const sendEmail = emailUtils.sendEmail;
+

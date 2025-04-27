@@ -5,7 +5,7 @@
 
 import { Router } from "express";
 import * as taskController from "../controllers/taskController.js";
-import { authenticate } from "../middlewares/auth.js";
+import { protect as authenticate } from "../middlewares/auth.js";
 import { validateTask } from "../middlewares/validation.js";
 
 // 创建路由实例

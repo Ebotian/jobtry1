@@ -10,7 +10,7 @@ import {
 	validateLogin,
 	validatePasswordReset,
 } from "../middlewares/validation.js";
-import { authenticate } from "../middlewares/auth.js";
+import { protect as authenticate } from "../middlewares/auth.js";
 
 // 创建路由实例
 const router = Router();
