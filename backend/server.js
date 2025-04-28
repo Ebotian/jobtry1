@@ -9,6 +9,7 @@ import cors from "cors";
 import { connectDB } from "./config/db.js";
 import taskRoutes from "./routes/taskRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import aiRoutes from "./routes/aiRoutes.js"; // 导入 AI 路由
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { logger } from "./utils/logger.js";
 
@@ -36,6 +37,7 @@ app.use((req, res, next) => {
 // 挂载路由
 app.use("/api/tasks", taskRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/ai", aiRoutes); // 添加 AI 路由
 
 // 健康检查路由
 app.get("/health", (req, res) => {

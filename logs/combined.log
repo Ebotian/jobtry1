@@ -59,3 +59,182 @@
   "LOG_LEVEL": "debug",
   "CORS_ORIGIN": "http://localhost:3000"
 }
+[2025-04-28 21:56:45] DEBUG: 当前环境配置:
+{
+  "NODE_ENV": "development",
+  "PORT": 5000,
+  "HOST": "localhost",
+  "MONGO_URI": "mongodb://localhost:27017/crawler-ai",
+  "JWT_SECRET": "******",
+  "JWT_EXPIRE": "30d",
+  "DEEPSEEK_API_KEY": "******",
+  "DEEPSEEK_API_URL": "https://api.deepseek.com/v1",
+  "CRAWLER_MAX_CONCURRENCY": 5,
+  "LOG_LEVEL": "debug",
+  "CORS_ORIGIN": "http://localhost:3000"
+}
+[2025-04-28 21:56:45] INFO: 服务器在端口 5000 上运行
+[2025-04-28 21:56:45] INFO: MongoDB 连接成功: localhost
+[2025-04-28 21:57:03] INFO: POST /api/ai/chat
+[2025-04-28 21:57:03] ERROR: unhandledRejection: logger.error is not a function
+TypeError: logger.error is not a function
+    at file:///home/ebit/jobtry1/backend/routes/aiRoutes.js:49:10
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+{
+  "error": {},
+  "rejection": true,
+  "date": "Mon Apr 28 2025 21:57:03 GMT+0800 (China Standard Time)",
+  "process": {
+    "pid": 14057,
+    "uid": 1000,
+    "gid": 1000,
+    "cwd": "/home/ebit/jobtry1/backend",
+    "execPath": "/usr/bin/node",
+    "version": "v23.9.0",
+    "argv": [
+      "/usr/bin/node",
+      "/home/ebit/jobtry1/backend/server.js"
+    ],
+    "memoryUsage": {
+      "rss": 145076224,
+      "heapTotal": 54218752,
+      "heapUsed": 51194232,
+      "external": 22066711,
+      "arrayBuffers": 18440202
+    }
+  },
+  "os": {
+    "loadavg": [
+      1.2,
+      0.83,
+      0.61
+    ],
+    "uptime": 1506.51
+  },
+  "trace": [
+    {
+      "column": 10,
+      "file": "file:///home/ebit/jobtry1/backend/routes/aiRoutes.js",
+      "function": null,
+      "line": 49,
+      "method": null,
+      "native": false
+    },
+    {
+      "column": 5,
+      "file": "node:internal/process/task_queues",
+      "function": "process.processTicksAndRejections",
+      "line": 105,
+      "method": "processTicksAndRejections",
+      "native": false
+    }
+  ]
+}
+TypeError: logger.error is not a function
+    at file:///home/ebit/jobtry1/backend/routes/aiRoutes.js:49:10
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[2025-04-28 21:57:03] ERROR: 未处理的Promise拒绝: logger.error is not a function
+[2025-04-28 22:00:27] DEBUG: 当前环境配置:
+{
+  "NODE_ENV": "development",
+  "PORT": 5000,
+  "HOST": "localhost",
+  "MONGO_URI": "mongodb://localhost:27017/crawler-ai",
+  "JWT_SECRET": "******",
+  "JWT_EXPIRE": "30d",
+  "DEEPSEEK_API_KEY": "******",
+  "DEEPSEEK_API_URL": "https://api.deepseek.com/v1",
+  "CRAWLER_MAX_CONCURRENCY": 5,
+  "LOG_LEVEL": "debug",
+  "CORS_ORIGIN": "http://localhost:3000"
+}
+[2025-04-28 22:00:27] INFO: 服务器在端口 5000 上运行
+[2025-04-28 22:00:27] INFO: MongoDB 连接成功: localhost
+[2025-04-28 22:00:34] INFO: POST /api/ai/chat
+[2025-04-28 22:00:34] ERROR: AI 聊天错误: logger.error is not a function
+[2025-04-28 22:00:52] INFO: POST /api/ai/chat
+[2025-04-28 22:00:52] ERROR: AI 聊天错误: logger.error is not a function
+[2025-04-28 22:05:21] DEBUG: 当前环境配置:
+{
+  "NODE_ENV": "development",
+  "PORT": 5000,
+  "HOST": "localhost",
+  "MONGO_URI": "mongodb://localhost:27017/crawler-ai",
+  "JWT_SECRET": "******",
+  "JWT_EXPIRE": "30d",
+  "DEEPSEEK_API_KEY": "******",
+  "DEEPSEEK_API_URL": "https://api.deepseek.com/v1",
+  "CRAWLER_MAX_CONCURRENCY": 5,
+  "LOG_LEVEL": "debug",
+  "CORS_ORIGIN": "http://localhost:3000"
+}
+[2025-04-28 22:05:21] INFO: 服务器在端口 5000 上运行
+[2025-04-28 22:05:21] INFO: MongoDB 连接成功: localhost
+[2025-04-28 22:05:28] INFO: POST /api/ai/chat
+[2025-04-28 22:05:28] INFO: 执行自定义AI分析: 得到...
+[2025-04-28 22:05:29] ERROR: DeepSeek API错误: Request failed with status code 404
+[2025-04-28 22:05:29] ERROR: 自定义AI分析错误: AI服务请求失败: Request failed with status code 404
+[2025-04-28 22:05:29] ERROR: AI 聊天错误: AI服务请求失败: Request failed with status code 404
+[2025-04-28 22:12:26] DEBUG: 当前环境配置:
+{
+  "NODE_ENV": "development",
+  "PORT": 5000,
+  "HOST": "localhost",
+  "MONGO_URI": "mongodb://localhost:27017/crawler-ai",
+  "JWT_SECRET": "******",
+  "JWT_EXPIRE": "30d",
+  "DEEPSEEK_API_KEY": "******",
+  "DEEPSEEK_API_URL": "https://api.deepseek.com/v1",
+  "CRAWLER_MAX_CONCURRENCY": 5,
+  "LOG_LEVEL": "debug",
+  "CORS_ORIGIN": "http://localhost:3000"
+}
+[2025-04-28 22:12:26] INFO: 服务器在端口 5000 上运行
+[2025-04-28 22:12:26] INFO: MongoDB 连接成功: localhost
+[2025-04-28 22:12:31] INFO: POST /api/ai/chat
+[2025-04-28 22:12:31] INFO: 执行自定义AI分析: 你好...
+[2025-04-28 22:12:31] ERROR: DeepSeek API错误: Request failed with status code 404
+[2025-04-28 22:12:31] ERROR: 自定义AI分析错误: AI服务请求失败: Request failed with status code 404
+[2025-04-28 22:12:31] ERROR: AI 聊天错误: AI服务请求失败: Request failed with status code 404
+[2025-04-28 22:19:28] DEBUG: 当前环境配置:
+{
+  "NODE_ENV": "development",
+  "PORT": 5000,
+  "HOST": "localhost",
+  "MONGO_URI": "mongodb://localhost:27017/crawler-ai",
+  "JWT_SECRET": "******",
+  "JWT_EXPIRE": "30d",
+  "DEEPSEEK_API_KEY": "******",
+  "DEEPSEEK_API_URL": "https://api.deepseek.com/v1",
+  "CRAWLER_MAX_CONCURRENCY": 5,
+  "LOG_LEVEL": "debug",
+  "CORS_ORIGIN": "http://localhost:3000"
+}
+[2025-04-28 22:19:28] INFO: 初始化DeepSeek客户端，baseURL: https://api.deepseek.com
+[2025-04-28 22:19:28] INFO: 服务器在端口 5000 上运行
+[2025-04-28 22:19:28] INFO: MongoDB 连接成功: localhost
+[2025-04-28 22:19:37] INFO: POST /api/ai/chat
+[2025-04-28 22:19:37] DEBUG: 发送 DeepSeek 聊天请求: [{"role":"system","content":"你是一个助手，帮助用户分析和理解互联网数据。请提供专业、准确、简洁的回答。"},{"role":"assistant","content":"与 AI 聊天失败，请稍后再试"},{"role":"user","content":"你好"},{"role":"assistant","content":"logger.error is not a function"},{"role":"user","content":"你给"},{"role":"assistant","content":"logger.error is not a function"},{"role":"user","content":"得到"},{"role":"assistant","content":"AI服务请求失败: Request failed with status code 404"},{"role":"user","content":"你好"},{"role":"assistant","content":"AI服务请求失败: Request failed with status code 404"},{"role":"user","content":"test"},{"role":"user","content":"test"}]
+[2025-04-28 22:19:37] ERROR: AI 聊天错误: aiService.chat is not a function
+[2025-04-28 22:45:01] DEBUG: 当前环境配置:
+{
+  "NODE_ENV": "development",
+  "PORT": 5000,
+  "HOST": "localhost",
+  "MONGO_URI": "mongodb://localhost:27017/crawler-ai",
+  "JWT_SECRET": "******",
+  "JWT_EXPIRE": "30d",
+  "DEEPSEEK_API_KEY": "******",
+  "DEEPSEEK_API_URL": "https://api.deepseek.com/v1",
+  "CRAWLER_MAX_CONCURRENCY": 5,
+  "LOG_LEVEL": "debug",
+  "CORS_ORIGIN": "http://localhost:3000"
+}
+[2025-04-28 22:45:02] INFO: 初始化DeepSeek客户端，baseURL: https://api.deepseek.com
+[2025-04-28 22:45:02] INFO: 服务器在端口 5000 上运行
+[2025-04-28 22:45:02] INFO: MongoDB 连接成功: localhost
+[2025-04-28 22:45:28] INFO: POST /api/ai/chat
+[2025-04-28 22:45:28] DEBUG: 发送 DeepSeek 聊天请求: [{"role":"system","content":"你是一个助手，帮助用户分析和理解互联网数据。请提供专业、准确、简洁的回答。"},{"role":"assistant","content":"logger.error is not a function"},{"role":"user","content":"你给"},{"role":"assistant","content":"logger.error is not a function"},{"role":"user","content":"得到"},{"role":"assistant","content":"AI服务请求失败: Request failed with status code 404"},{"role":"user","content":"你好"},{"role":"assistant","content":"AI服务请求失败: Request failed with status code 404"},{"role":"user","content":"test"},{"role":"assistant","content":"AI 聊天错误: aiService.chat is not a function"},{"role":"user","content":"好好"},{"role":"user","content":"好好"}]
+[2025-04-28 22:45:28] INFO: 发送 DeepSeek 聊天请求: [{"role":"system","content":"你是一个助手，帮助用户分析和理解互联网数据。请提供专业、准确、简洁的回答。"},{"role":"assistant","content":"logger.error is not a function"},{"role":"user","content":"你给"},{"role":"assistant","content":"logger.error is not a function"},{"role":"user","content":"得到"},{"role":"assistant","content":"AI服务请求失败: Request failed with status code 404"},{"role":"user","content":"你好"},{"role":"assistant","content":"AI服务请求失败: Request failed with status code 404"},{"role":"user","content":"test"},{"role":"assistant","content":"AI 聊天错误: aiService.chat is not a function"},{"role":"user","content":"好好"},{"role":"user","content":"好好"}]
+[2025-04-28 22:45:28] DEBUG: 发送聊天请求: {"model":"deepseek-chat","messages":[{"role":"system","content":"你是一个助手，帮助用户分析和理解互联网数据。请提供专业、准确、简洁的回答。"},{"role":"assistant","content":"logger.error is not a function"},{"role":"user","content":"你给"},{"role":"assistant","content":"logger.error is not a function"},{"role":"user","content":"得到"},{"role":"assistant","content":"AI服务请求失败: Request failed with status code 404"},{"role":"user","content":"你好"},{"role":"assistant","content":"AI服务请求失败: Request failed with status code 404"},{"role":"user","content":"test"},{"role":"assistant","content":"AI 聊天错误: aiService.chat is not a function"},{"role":"user","content":"好好"},{"role":"user","content":"好好"}],"temperature":0.7,"max_tokens":1000,"top_p":0.9}
+[2025-04-28 22:45:33] DEBUG: 聊天响应: {"id":"6fbe9b4b-466c-4b69-969b-570ed3e62af9","object":"chat.completion","created":1745851529,"model":"deepseek-chat","choices":[{"index":0,"message":{"role":"assistant","content":"你好！请问有什么可以帮您解决的问题吗？😊"},"logprobs":null,"finish_reason":"stop"}],"usage":{"prompt_tokens":93,"completion_tokens":12,"total_tokens":105,"prompt_tokens_details":{"cached_tokens":0},"prompt_cache_hit_tokens":0,"prompt_cache_miss_tokens":93},"system_fingerprint":"fp_8802369eaa_prod0425fp8"}

@@ -1,204 +1,90 @@
 /**
- * API Service
- *
- * Centralized API communication service using Fetch API with modern ES6 features.
- * Handles request/response formatting, authentication, and error handling.
+ * @fileoverview API 服务基础设置
+ * 配置 Axios 实例，添加请求/响应拦截器，处理授权和错误
  */
 
-import { Endpoints, ErrorCodes } from "../types/api";
+import axios from "axios";
 
-/**
- * Default request options for fetch
- */
-const defaultOptions = {
+// 创建 axios 实例
+const api = axios.create({
+	baseURL: "http://localhost:5000/api", // 指向运行在 5000 端口的后端服务
+	timeout: 10000, // 请求超时时间
 	headers: {
 		"Content-Type": "application/json",
 		Accept: "application/json",
 	},
-};
+});
 
-/**
- * Get stored auth token from localStorage
- * @returns {string|null} The stored token or null if not found
- */
-const getAuthToken = () => localStorage.getItem("authToken");
-
-/**
- * Add auth token to request headers if available
- * @param {Object} options - Fetch request options
- * @returns {Object} Updated options with auth token if available
- */
-const withAuth = (options = {}) => {
-	const token = getAuthToken();
-	if (!token) return options;
-
-	return {
-		...options,
-		headers: {
-			...options.headers,
-			Authorization: `Bearer ${token}`,
-		},
-	};
-};
-
-/**
- * Process API response
- * @param {Response} response - Fetch Response object
- * @returns {Promise<any>} Parsed response data
- * @throws {Error} If response is not ok
- */
-const handleResponse = async (response) => {
-	const contentType = response.headers.get("content-type");
-	const isJson = contentType && contentType.includes("application/json");
-	const data = isJson ? await response.json() : await response.text();
-
-	if (!response.ok) {
-		// Create error with the API's error information
-		const error = new Error(
-			(data && data.error && data.error.message) || response.statusText
-		);
-		error.status = response.status;
-		error.code =
-			(data && data.error && data.error.code) || ErrorCodes.SERVER_ERROR;
-		error.response = response;
-		error.data = data;
-		throw error;
+// 请求拦截器 - 添加 token
+api.interceptors.request.use(
+	(config) => {
+		const token = localStorage.getItem("token");
+		if (token) {
+			config.headers["Authorization"] = `Bearer ${token}`;
+		}
+		return config;
+	},
+	(error) => {
+		return Promise.reject(error);
 	}
+);
 
-	return data;
-};
+// 响应拦截器 - 处理错误和刷新 token
+api.interceptors.response.use(
+	(response) => {
+		return response;
+	},
+	async (error) => {
+		const originalRequest = error.config;
 
-/**
- * API request wrapper with automatic error handling
- * @param {string} url - API endpoint URL
- * @param {Object} options - Fetch request options
- * @param {boolean} [requiresAuth=true] - Whether this request requires authentication
- * @returns {Promise<any>} Parsed response data
- */
-const apiRequest = async (url, options = {}, requiresAuth = true) => {
-	try {
-		const requestOptions = {
-			...defaultOptions,
-			...options,
-			headers: {
-				...defaultOptions.headers,
-				...options.headers,
-			},
-		};
-
-		// Add auth token if required
-		const finalOptions = requiresAuth
-			? withAuth(requestOptions)
-			: requestOptions;
-
-		const response = await fetch(url, finalOptions);
-		return await handleResponse(response);
-	} catch (error) {
-		// Handle token expiration
+		// 如果是 401 错误（未授权）且不是刷新 token 的请求
 		if (
-			error.status === 401 &&
-			error.code === ErrorCodes.AUTHENTICATION_ERROR
+			error.response?.status === 401 &&
+			!originalRequest._retry &&
+			!originalRequest.url.includes("auth/refresh") &&
+			!originalRequest.url.includes("auth/login")
 		) {
-			// Try to refresh token or redirect to login
-			// This could trigger an auth event in your auth store
-			console.error("Authentication error:", error.message);
-			// Optional: window.dispatchEvent(new CustomEvent('auth:required'));
+			originalRequest._retry = true;
+
+			try {
+				// 尝试刷新 token
+				const refreshToken = localStorage.getItem("refreshToken");
+				if (refreshToken) {
+					const res = await axios.post(
+						"http://localhost:5000/api/auth/refresh",
+						{},
+						{
+							headers: { Authorization: `Bearer ${refreshToken}` },
+						}
+					);
+
+					if (res.data.token) {
+						// 保存新 token
+						localStorage.setItem("token", res.data.token);
+
+						// 更新原请求的 token 并重试
+						originalRequest.headers[
+							"Authorization"
+						] = `Bearer ${res.data.token}`;
+						return axios(originalRequest);
+					}
+				}
+
+				// 刷新失败，可能需要重新登录
+				localStorage.removeItem("token");
+				localStorage.removeItem("refreshToken");
+				window.location.href = "/login";
+			} catch (refreshError) {
+				// 刷新 token 失败，清除用户信息并重定向到登录页
+				localStorage.removeItem("token");
+				localStorage.removeItem("refreshToken");
+				window.location.href = "/login";
+				return Promise.reject(refreshError);
+			}
 		}
 
-		throw error;
+		return Promise.reject(error);
 	}
-};
-
-/**
- * API Service object with methods for different HTTP verbs
- */
-const api = {
-	/**
-	 * Make a GET request
-	 * @param {string} url - API endpoint URL
-	 * @param {Object} [options={}] - Additional fetch options
-	 * @param {boolean} [requiresAuth=true] - Whether this request requires auth
-	 * @returns {Promise<any>} Parsed response data
-	 */
-	get: (url, options = {}, requiresAuth = true) => {
-		return apiRequest(url, { ...options, method: "GET" }, requiresAuth);
-	},
-
-	/**
-	 * Make a POST request
-	 * @param {string} url - API endpoint URL
-	 * @param {Object} data - Request payload
-	 * @param {Object} [options={}] - Additional fetch options
-	 * @param {boolean} [requiresAuth=true] - Whether this request requires auth
-	 * @returns {Promise<any>} Parsed response data
-	 */
-	post: (url, data, options = {}, requiresAuth = true) => {
-		return apiRequest(
-			url,
-			{
-				...options,
-				method: "POST",
-				body: JSON.stringify(data),
-			},
-			requiresAuth
-		);
-	},
-
-	/**
-	 * Make a PUT request
-	 * @param {string} url - API endpoint URL
-	 * @param {Object} data - Request payload
-	 * @param {Object} [options={}] - Additional fetch options
-	 * @param {boolean} [requiresAuth=true] - Whether this request requires auth
-	 * @returns {Promise<any>} Parsed response data
-	 */
-	put: (url, data, options = {}, requiresAuth = true) => {
-		return apiRequest(
-			url,
-			{
-				...options,
-				method: "PUT",
-				body: JSON.stringify(data),
-			},
-			requiresAuth
-		);
-	},
-
-	/**
-	 * Make a DELETE request
-	 * @param {string} url - API endpoint URL
-	 * @param {Object} [options={}] - Additional fetch options
-	 * @param {boolean} [requiresAuth=true] - Whether this request requires auth
-	 * @returns {Promise<any>} Parsed response data
-	 */
-	delete: (url, options = {}, requiresAuth = true) => {
-		return apiRequest(url, { ...options, method: "DELETE" }, requiresAuth);
-	},
-
-	/**
-	 * Upload file(s) with multipart/form-data
-	 * @param {string} url - API endpoint URL
-	 * @param {FormData} formData - FormData object with files and other form fields
-	 * @param {Object} [options={}] - Additional fetch options
-	 * @param {boolean} [requiresAuth=true] - Whether this request requires auth
-	 * @returns {Promise<any>} Parsed response data
-	 */
-	upload: (url, formData, options = {}, requiresAuth = true) => {
-		// Don't set Content-Type header, browser will set it automatically with boundary
-		const uploadOptions = {
-			...options,
-			method: "POST",
-			body: formData,
-			headers: {
-				...options.headers,
-			},
-		};
-
-		// Remove Content-Type header as browser will set it with the proper boundary
-		delete uploadOptions.headers["Content-Type"];
-
-		return apiRequest(url, uploadOptions, requiresAuth);
-	},
-};
+);
 
 export default api;

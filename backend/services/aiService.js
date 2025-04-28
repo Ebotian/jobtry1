@@ -6,13 +6,14 @@
 import axios from "axios";
 import { promises as fs } from "fs";
 import path from "path";
-import logger from "../utils/logger.js";
-import  config  from "../config/env.js";
+import { logger } from "../utils/logger.js"; // 修改为导入具名对象
+import config from "../config/env.js";
 
 class DeepSeekClient {
 	constructor(apiKey) {
 		this.apiKey = apiKey || config.DEEPSEEK_API_KEY;
-		this.baseURL = "https://api.deepseek.com/v1";
+		// Update the baseURL to match DeepSeek's official API endpoint
+		this.baseURL = "https://api.deepseek.com";
 		this.client = axios.create({
 			baseURL: this.baseURL,
 			headers: {
@@ -20,6 +21,7 @@ class DeepSeekClient {
 				"Content-Type": "application/json",
 			},
 		});
+		logger.info(`初始化DeepSeek客户端，baseURL: ${this.baseURL}`);
 	}
 
 	/**
@@ -30,6 +32,9 @@ class DeepSeekClient {
 	handleError(error) {
 		const errorMessage = error.response?.data?.error?.message || error.message;
 		logger.error(`DeepSeek API错误: ${errorMessage}`);
+		logger.debug(
+			`完整错误对象: ${JSON.stringify(error.response?.data || error.message)}`
+		);
 		throw new Error(`AI服务请求失败: ${errorMessage}`);
 	}
 
@@ -42,20 +47,35 @@ class DeepSeekClient {
 	async generateSummary(text, options = {}) {
 		try {
 			const defaultOptions = {
-				style: "bullet_points",
-				focus_keywords: [],
-				max_length: 300,
+				model: "deepseek-chat",
+				messages: [
+					{
+						role: "system",
+						content: "请将以下文本生成简洁的摘要，保留关键信息。",
+					},
+					{
+						role: "user",
+						content: text,
+					},
+				],
 				temperature: 0.3,
+				max_tokens: 300,
 			};
 
-			const mergedOptions = { ...defaultOptions, ...options };
+			const mergedOptions = {
+				...defaultOptions,
+				temperature: options.temperature || defaultOptions.temperature,
+				max_tokens: options.max_length || defaultOptions.max_tokens,
+			};
 
-			const response = await this.client.post("/summarize", {
-				text,
-				params: mergedOptions,
-			});
+			logger.debug(`发送摘要请求: ${JSON.stringify(mergedOptions)}`);
+			const response = await this.client.post(
+				"/v1/chat/completions",
+				mergedOptions
+			);
+			logger.debug(`摘要响应: ${JSON.stringify(response.data)}`);
 
-			return response.data.summary;
+			return response.data.choices[0].message.content;
 		} catch (error) {
 			this.handleError(error);
 		}
@@ -68,19 +88,47 @@ class DeepSeekClient {
 	 */
 	async analyzeSentiment(text) {
 		try {
-			const response = await this.client.post("/analyze", {
-				text,
-				analysis_type: "sentiment",
-				params: {
-					detailed: true,
-				},
-			});
-
-			return {
-				sentiment: response.data.sentiment,
-				score: response.data.score,
-				details: response.data.details,
+			const requestData = {
+				model: "deepseek-chat",
+				messages: [
+					{
+						role: "system",
+						content:
+							"请对以下文本进行情感分析，返回JSON格式，包含sentiment(积极/消极/中性)、score(0-1的分数)和details(分析细节)",
+					},
+					{
+						role: "user",
+						content: text,
+					},
+				],
+				temperature: 0.1,
+				response_format: { type: "json_object" },
 			};
+
+			logger.debug(`发送情感分析请求: ${JSON.stringify(requestData)}`);
+			const response = await this.client.post(
+				"/v1/chat/completions",
+				requestData
+			);
+			logger.debug(`情感分析响应: ${JSON.stringify(response.data)}`);
+
+			const content = response.data.choices[0].message.content;
+
+			try {
+				const result = JSON.parse(content);
+				return {
+					sentiment: result.sentiment,
+					score: result.score,
+					details: result.details,
+				};
+			} catch (e) {
+				// If JSON parsing fails, return a structured format anyway
+				return {
+					sentiment: "unknown",
+					score: 0.5,
+					details: content,
+				};
+			}
 		} catch (error) {
 			this.handleError(error);
 		}
@@ -94,15 +142,38 @@ class DeepSeekClient {
 	 */
 	async extractTopics(text, topN = 5) {
 		try {
-			const response = await this.client.post("/analyze", {
-				text,
-				analysis_type: "topics",
-				params: {
-					top_n: topN,
-				},
-			});
+			const requestData = {
+				model: "deepseek-chat",
+				messages: [
+					{
+						role: "system",
+						content: `请从以下文本中提取最重要的${topN}个主题，以JSON数组格式返回`,
+					},
+					{
+						role: "user",
+						content: text,
+					},
+				],
+				temperature: 0.1,
+				response_format: { type: "json_object" },
+			};
 
-			return response.data.topics;
+			logger.debug(`发送主题提取请求: ${JSON.stringify(requestData)}`);
+			const response = await this.client.post(
+				"/v1/chat/completions",
+				requestData
+			);
+			logger.debug(`主题提取响应: ${JSON.stringify(response.data)}`);
+
+			const content = response.data.choices[0].message.content;
+
+			try {
+				const result = JSON.parse(content);
+				return result.topics || result;
+			} catch (e) {
+				// If JSON parsing fails, return the raw text
+				return [content];
+			}
 		} catch (error) {
 			this.handleError(error);
 		}
@@ -118,19 +189,75 @@ class DeepSeekClient {
 	async customAnalysis(text, prompt, options = {}) {
 		try {
 			const defaultOptions = {
-				temperature: 0.1,
+				temperature: 0.7,
 				max_tokens: 1000,
 				top_p: 0.9,
 			};
 
 			const mergedOptions = { ...defaultOptions, ...options };
 
-			const response = await this.client.post("/complete", {
-				prompt: `${prompt}\n\n文本: ${text}`,
-				...mergedOptions,
-			});
+			const requestData = {
+				model: "deepseek-chat",
+				messages: [
+					{
+						role: "system",
+						content: prompt,
+					},
+					{
+						role: "user",
+						content: text,
+					},
+				],
+				temperature: mergedOptions.temperature,
+				max_tokens: mergedOptions.max_tokens,
+				top_p: mergedOptions.top_p,
+			};
 
-			return response.data.choices[0].text;
+			logger.debug(`发送自定义分析请求: ${JSON.stringify(requestData)}`);
+			const response = await this.client.post(
+				"/v1/chat/completions",
+				requestData
+			);
+			logger.debug(`自定义分析响应: ${JSON.stringify(response.data)}`);
+
+			return response.data.choices[0].message.content;
+		} catch (error) {
+			this.handleError(error);
+		}
+	}
+
+	/**
+	 * 进行AI聊天
+	 * @param {Array} messages - 聊天消息数组，格式为 [{role: 'user'|'assistant'|'system', content: 'message'}]
+	 * @param {Object} options - 聊天选项
+	 * @returns {Promise<Object>} 聊天响应
+	 */
+	async chat(messages, options = {}) {
+		try {
+			const defaultOptions = {
+				temperature: 0.7,
+				max_tokens: 1000,
+				top_p: 0.9,
+			};
+
+			const mergedOptions = { ...defaultOptions, ...options };
+
+			const requestData = {
+				model: "deepseek-chat",
+				messages: messages,
+				temperature: mergedOptions.temperature,
+				max_tokens: mergedOptions.max_tokens,
+				top_p: mergedOptions.top_p,
+			};
+
+			logger.debug(`发送聊天请求: ${JSON.stringify(requestData)}`);
+			const response = await this.client.post(
+				"/v1/chat/completions",
+				requestData
+			);
+			logger.debug(`聊天响应: ${JSON.stringify(response.data)}`);
+
+			return response.data.choices[0].message.content;
 		} catch (error) {
 			this.handleError(error);
 		}
@@ -240,6 +367,23 @@ class AIService {
 	}
 
 	/**
+	 * 与AI进行对话
+	 * @param {Array} messages - 聊天消息数组，格式为 [{role: 'user'|'assistant'|'system', content: 'message'}]
+	 * @param {Object} options - 聊天选项
+	 * @returns {Promise<string>} 聊天响应内容
+	 */
+	async chat(messages, options = {}) {
+		try {
+			logger.info(`发送 DeepSeek 聊天请求: ${JSON.stringify(messages)}`);
+			const response = await this.client.chat(messages, options);
+			return response;
+		} catch (error) {
+			logger.error(`AI 聊天错误: ${error.message}`);
+			throw error;
+		}
+	}
+
+	/**
 	 * 生成文本摘要
 	 * @param {string} text - 需要摘要的文本
 	 * @param {Object} options - 摘要选项
@@ -344,6 +488,29 @@ class AIService {
 	}
 
 	/**
+	 * 自定义AI分析
+	 * @param {string} message - 用户消息
+	 * @param {string} contextPrompt - 上下文提示词
+	 * @param {Object} options - 分析选项
+	 * @returns {Promise<string>} 分析结果
+	 */
+	async customAnalysis(message, contextPrompt, options = {}) {
+		try {
+			logger.info(`执行自定义AI分析: ${message.substring(0, 50)}...`);
+			const processedText = TextProcessor.preprocess(message);
+			const result = await this.client.customAnalysis(
+				processedText,
+				contextPrompt,
+				options
+			);
+			return result;
+		} catch (error) {
+			logger.error(`自定义AI分析错误: ${error.message}`);
+			throw error;
+		}
+	}
+
+	/**
 	 * 将分析结果保存到文件
 	 * @param {Object|string} result - 分析结果
 	 * @param {string} filename - 文件名
@@ -375,7 +542,7 @@ class AIService {
 	}
 }
 
-// 导出单例实例
+// 导出AIService的单例实例
 const aiService = new AIService();
 export default aiService;
 

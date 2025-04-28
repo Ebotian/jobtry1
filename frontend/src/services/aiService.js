@@ -1,107 +1,95 @@
 /**
- * AI Service
- *
- * Handles all AI-related API operations.
+ * @fileoverview AI 服务接口
+ * 提供与后端 AI API 通信的功能，如聊天、摘要、情感分析等
  */
 
 import api from "./api";
 
 /**
- * Base URL for AI endpoints
+ * 与 AI 进行聊天
+ * @param {string} message - 用户消息
+ * @param {Array} [history=[]] - 聊天历史记录
+ * @returns {Promise<Object>} - 聊天响应
  */
-const BASE_URL = "/api/ai";
-
-/**
- * AI Service
- */
-const aiService = {
-	/**
-	 * Analyze text sentiment
-	 * @param {string} text - Text to analyze
-	 * @returns {Promise<{sentiment: number, analysis: Object}>} Sentiment analysis result
-	 */
-	analyzeSentiment: async (text) => {
-		return api.post(`${BASE_URL}/sentiment`, { text });
-	},
-
-	/**
-	 * Generate a summary for collected data
-	 * @param {Object} data - The data to summarize
-	 * @param {string} [data.taskId] - Optional task ID to summarize specific task data
-	 * @param {Array} [data.results] - Optional results array to summarize
-	 * @returns {Promise<{summary: string}>} Generated summary
-	 */
-	generateSummary: async (data) => {
-		return api.post(`${BASE_URL}/summarize`, data);
-	},
-
-	/**
-	 * Extract keywords from text
-	 * @param {string} text - Text to extract keywords from
-	 * @param {Object} [options] - Extraction options
-	 * @param {number} [options.limit=10] - Maximum number of keywords to extract
-	 * @returns {Promise<{keywords: Array<{text: string, score: number}>}>} Extracted keywords
-	 */
-	extractKeywords: async (text, options = {}) => {
-		return api.post(`${BASE_URL}/keywords`, {
-			text,
-			...options,
-		});
-	},
-
-	/**
-	 * Generate a response to a user message in a chat context
-	 * @param {string} message - User message
-	 * @param {Array} [history=[]] - Previous chat history
-	 * @returns {Promise<{response: string, context?: Object}>} AI generated response
-	 */
-	chatCompletion: async (message, history = []) => {
-		return api.post(`${BASE_URL}/chat`, {
+export const chatWithAI = async (message, history = []) => {
+	try {
+		const response = await api.post("/ai/chat", {
 			message,
 			history,
 		});
-	},
-
-	/**
-	 * Classify content into categories
-	 * @param {string} content - Content to classify
-	 * @param {Array<string>} [categories] - Optional predefined categories
-	 * @returns {Promise<{category: string, confidence: number, alternativeCategories?: Array}>} Classification result
-	 */
-	classifyContent: async (content, categories) => {
-		return api.post(`${BASE_URL}/classify`, {
-			content,
-			categories,
-		});
-	},
-
-	/**
-	 * Get visualization recommendations for data
-	 * @param {Array} data - Dataset to visualize
-	 * @param {Object} [options] - Visualization options
-	 * @returns {Promise<{recommendations: Array, chartTypes: Array}>} Visualization recommendations
-	 */
-	getVisualizationRecommendations: async (data, options = {}) => {
-		return api.post(`${BASE_URL}/visualize/recommend`, {
-			data,
-			options,
-		});
-	},
-
-	/**
-	 * Generate chart configuration for a specific chart type
-	 * @param {Array} data - Dataset to visualize
-	 * @param {string} chartType - Type of chart to generate
-	 * @param {Object} [options] - Chart options
-	 * @returns {Promise<{config: Object}>} Chart configuration
-	 */
-	generateChartConfig: async (data, chartType, options = {}) => {
-		return api.post(`${BASE_URL}/visualize/config`, {
-			data,
-			chartType,
-			options,
-		});
-	},
+		return response.data;
+	} catch (error) {
+		console.error("AI 聊天请求失败:", error);
+		throw new Error(
+			error.response?.data?.error?.message || "与 AI 聊天失败，请稍后再试"
+		);
+	}
 };
 
-export default aiService;
+/**
+ * 获取文本摘要
+ * @param {string} text - 需要摘要的文本
+ * @param {Object} [options={}] - 摘要选项
+ * @returns {Promise<Object>} - 摘要响应
+ */
+export const getSummary = async (text, options = {}) => {
+	try {
+		const response = await api.post("/ai/summarize", {
+			text,
+			options,
+		});
+		return response.data;
+	} catch (error) {
+		console.error("获取摘要失败:", error);
+		throw new Error(
+			error.response?.data?.error?.message || "获取摘要失败，请稍后再试"
+		);
+	}
+};
+
+/**
+ * 进行情感分析
+ * @param {string} text - 需要分析的文本
+ * @returns {Promise<Object>} - 情感分析结果
+ */
+export const analyzeSentiment = async (text) => {
+	try {
+		const response = await api.post("/ai/sentiment", {
+			text,
+		});
+		return response.data;
+	} catch (error) {
+		console.error("情感分析失败:", error);
+		throw new Error(
+			error.response?.data?.error?.message || "情感分析失败，请稍后再试"
+		);
+	}
+};
+
+/**
+ * 提取文本主题和关键词
+ * @param {string} text - 需要分析的文本
+ * @param {number} [topN=5] - 返回的主题数量
+ * @returns {Promise<Object>} - 主题和关键词
+ */
+export const extractTopics = async (text, topN = 5) => {
+	try {
+		const response = await api.post("/ai/topics", {
+			text,
+			topN,
+		});
+		return response.data;
+	} catch (error) {
+		console.error("主题提取失败:", error);
+		throw new Error(
+			error.response?.data?.error?.message || "主题提取失败，请稍后再试"
+		);
+	}
+};
+
+export default {
+	chatWithAI,
+	getSummary,
+	analyzeSentiment,
+	extractTopics,
+};

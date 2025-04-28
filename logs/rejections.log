@@ -1,0 +1,57 @@
+[2025-04-28 21:57:03] ERROR: unhandledRejection: logger.error is not a function
+TypeError: logger.error is not a function
+    at file:///home/ebit/jobtry1/backend/routes/aiRoutes.js:49:10
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+{
+  "error": {},
+  "rejection": true,
+  "date": "Mon Apr 28 2025 21:57:03 GMT+0800 (China Standard Time)",
+  "process": {
+    "pid": 14057,
+    "uid": 1000,
+    "gid": 1000,
+    "cwd": "/home/ebit/jobtry1/backend",
+    "execPath": "/usr/bin/node",
+    "version": "v23.9.0",
+    "argv": [
+      "/usr/bin/node",
+      "/home/ebit/jobtry1/backend/server.js"
+    ],
+    "memoryUsage": {
+      "rss": 145076224,
+      "heapTotal": 54218752,
+      "heapUsed": 51194232,
+      "external": 22066711,
+      "arrayBuffers": 18440202
+    }
+  },
+  "os": {
+    "loadavg": [
+      1.2,
+      0.83,
+      0.61
+    ],
+    "uptime": 1506.51
+  },
+  "trace": [
+    {
+      "column": 10,
+      "file": "file:///home/ebit/jobtry1/backend/routes/aiRoutes.js",
+      "function": null,
+      "line": 49,
+      "method": null,
+      "native": false
+    },
+    {
+      "column": 5,
+      "file": "node:internal/process/task_queues",
+      "function": "process.processTicksAndRejections",
+      "line": 105,
+      "method": "processTicksAndRejections",
+      "native": false
+    }
+  ]
+}
+TypeError: logger.error is not a function
+    at file:///home/ebit/jobtry1/backend/routes/aiRoutes.js:49:10
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
