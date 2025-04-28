@@ -17,14 +17,9 @@ import useChatStore from '../../store/chatStore';
  * @returns {JSX.Element} 应用程序的主布局组件
  */
 const MainLayout = () => {
-  // 从状态管理中获取所需数据
-  const {
-    aiSummary,
-    isGeneratingSummary
-  } = useChatStore(state => ({
-    aiSummary: state.summary,
-    isGeneratingSummary: state.isGeneratingSummary
-  }));
+  // 从状态管理中获取所需数据 - 使用单独的选择器避免创建新对象
+  const aiSummary = useChatStore(state => state.summary);
+  const isGeneratingSummary = useChatStore(state => state.isGeneratingSummary);
 
   // 使用本地状态管理图表数据，避免测试数据在组件中硬编码
   const [chartData, setChartData] = useState({
