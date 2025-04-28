@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
+import svgPanZoom from 'svg-pan-zoom';
 
 /**
  * RightChart 组件 - 渲染 AI 生成的 Mermaid 图表
@@ -29,6 +30,8 @@ const RightChart = ({ definition = '' }) => {
 
   // 图表容器引用
   const chartRef = useRef(null);
+  // svg-pan-zoom 实例引用
+  const panZoomRef = useRef(null);
 
   /**
    * 复制 Mermaid 源代码到剪贴板
@@ -57,6 +60,15 @@ const RightChart = ({ definition = '' }) => {
    */
   const toggleSourceView = () => {
     setShowSource(!showSource);
+  };
+
+  /**
+   * 重置缩放平移状态
+   */
+  const resetZoom = () => {
+    if (panZoomRef.current) {
+      panZoomRef.current.reset();
+    }
   };
 
   /**
@@ -100,6 +112,36 @@ const RightChart = ({ definition = '' }) => {
       // 更新 SVG 内容
       setSvgContent(svg);
       setLoading(false);
+
+      // 使用 setTimeout 确保 SVG 已被渲染到 DOM
+      setTimeout(() => {
+        const svgElement = chartRef.current?.querySelector('svg');
+        if (svgElement) {
+          // 初始化 svg-pan-zoom
+          if (panZoomRef.current) {
+            panZoomRef.current.destroy();
+          }
+
+          panZoomRef.current = svgPanZoom(svgElement, {
+            zoomEnabled: true,
+            controlIconsEnabled: true,
+            fit: true,
+            center: true,
+            minZoom: 0.5,
+            maxZoom: 10,
+            zoomScaleSensitivity: 0.3
+          });
+
+          // 初始缩放以适应内容
+          panZoomRef.current.resize();
+          panZoomRef.current.fit();
+          panZoomRef.current.center();
+
+          // 稍微放大以提高初始可见性
+          setTimeout(() => panZoomRef.current.zoom(1.2), 100);
+        }
+      }, 100);
+
     } catch (err) {
       console.error('Mermaid 渲染错误:', err);
       setError('图表渲染失败，请检查图表定义格式');
@@ -110,6 +152,14 @@ const RightChart = ({ definition = '' }) => {
   // 当定义变化时重新渲染图表
   useEffect(() => {
     renderMermaid();
+
+    // 清除函数，在组件卸载时销毁 svg-pan-zoom 实例
+    return () => {
+      if (panZoomRef.current) {
+        panZoomRef.current.destroy();
+        panZoomRef.current = null;
+      }
+    };
   }, [definition]);
 
   // 默认的示例图表，当没有提供定义时显示
@@ -173,6 +223,14 @@ const RightChart = ({ definition = '' }) => {
           title="复制源代码"
         >
           {copyFeedback || "复制源代码"}
+        </button>
+        <button
+          className="reset-zoom-button"
+          onClick={resetZoom}
+          aria-label="重置缩放"
+          title="重置缩放"
+        >
+          重置视图
         </button>
       </div>
 

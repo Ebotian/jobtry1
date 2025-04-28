@@ -101,7 +101,8 @@
 
 /* 图表操作按钮样式 */
 .source-button,
-.copy-button {
+.copy-button,
+.reset-zoom-button {
   background-color: rgba(0, 0, 0, 0.3);
   color: var(--text-light, #ffffff);
   border: none;
@@ -114,12 +115,14 @@
 }
 
 .source-button:hover,
-.copy-button:hover {
+.copy-button:hover,
+.reset-zoom-button:hover {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
 .source-button:active,
-.copy-button:active {
+.copy-button:active,
+.reset-zoom-button:active {
   transform: scale(0.98);
 }
 
