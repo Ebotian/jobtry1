@@ -1,47 +1,48 @@
+/* 全局最佳实践盒模型设置 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 /* 图表容器主样式 */
 .chart-container {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--card-gap);
   width: 100%;
-  gap: 16px;
-  height: 300px;
-  margin-bottom: 16px;
-}
-
-/* 水平布局 - 在宽屏上左右排列 */
-.horizontal-layout {
-  flex-direction: row;
-}
-
-/* 垂直布局 - 在窄屏上上下排列 */
-.vertical-layout {
-  flex-direction: column;
-  height: auto;
+  padding: var(--card-gap);
+  margin-bottom: var(--card-gap);
+  background-color: var(--background, transparent);
+  border-radius: 12px;
 }
 
 /* 图表面板样式 */
 .chart-panel {
   background-color: var(--secondary-color, #242438);
+  border: 1px solid var(--border-color, #2d2d3a);
   border-radius: 8px;
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* 垂直布局时的图表面板样式 */
 .vertical-layout .chart-panel {
-  min-height: 250px;
+  min-height: 280px;
 }
 
 /* 图表标题样式 */
 .chart-title {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: var(--text-light, #ffffff);
   margin: 0;
-  padding: 12px 16px;
+  padding: 14px 18px;
   border-bottom: 1px solid var(--border-color, #2d2d3a);
+  background-color: var(--panel-header-bg, rgba(0, 0, 0, 0.1));
 }
 
 /* 词云容器样式 */
@@ -49,7 +50,7 @@
   flex: 1;
   position: relative;
   width: 100%;
-  height: 100%;
+  /* flex layout handles sizing; remove fixed height */
   padding: 8px;
 }
 
@@ -80,12 +81,12 @@
   justify-content: center;
 }
 
-/* 确保 SVG 图表适应容器 */
+/* 确保 SVG 图表适应容器，强制填充 */
 .mermaid-svg-container svg {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none;
+  max-height: none;
 }
 
 /* 图表操作栏样式 */
@@ -222,19 +223,29 @@
 /* 响应式设计 */
 @media (max-width: 768px) {
   .chart-container {
-    flex-direction: column;
+    padding: 12px;
+    gap: 16px;
     height: auto;
   }
 
   .chart-panel {
     min-height: 250px;
   }
+
+  .vertical-layout .chart-panel {
+    min-height: 260px;
+  }
 }
 
 @media (max-width: 480px) {
+  .chart-container {
+    padding: 8px;
+    gap: 12px;
+  }
+
   .chart-title {
-    font-size: 0.9rem;
-    padding: 10px 12px;
+    font-size: 1rem;
+    padding: 10px 14px;
   }
 
   .chart-panel {

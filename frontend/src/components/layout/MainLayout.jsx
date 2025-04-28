@@ -4,6 +4,7 @@ import ChatContainer from '../chat/ChatContainer';
 import ChartContainer from '../charts/ChartContainer';
 import SummaryCard from '../summary/SummaryCard';
 import ControlPanel from '../controls/ControlPanel';
+import LoginPopup from '../login/LoginPopup';
 
 // 导入状态管理钩子
 import useChatStore from '../../store/chatStore';
@@ -32,10 +33,12 @@ const MainLayout = () => {
     `
   });
 
+  const [isLoginOpen, setLoginOpen] = useState(false);
+
   return (
     <div className="app-layout">
       {/* 左侧侧边栏 */}
-      <Sidebar />
+      <Sidebar onLoginClick={() => setLoginOpen(true)} />
 
       {/* 右侧内容区域 */}
       <div className="content">
@@ -45,20 +48,19 @@ const MainLayout = () => {
         {/* 摘要卡片 - 使用新创建的SummaryCard组件 */}
         <SummaryCard
           summary={aiSummary || '等待分析...'}
-          loading={isGeneratingSummary}
+          loading={isGeneratingSummary|| false}
         />
 
         {/* 数据可视化区域 */}
-        <div className="visualizations">
-          <ChartContainer
+        <ChartContainer
             wordCloudData={chartData.wordCloudData}
             mermaidDefinition={chartData.mermaidDefinition}
-          />
-        </div>
+        />
 
         {/* 控制面板 */}
         <ControlPanel />
       </div>
+      <LoginPopup isOpen={isLoginOpen} onClose={() => setLoginOpen(false)} />
     </div>
   );
 };

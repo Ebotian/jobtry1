@@ -7,9 +7,11 @@ import './Sidebar.css';
  * 提供应用程序的主要导航功能，包括logo、导航项和用户配置文件
  * 使用SVG图标实现简洁、现代的设计
  *
+ * @param {Object} props - 组件的属性
+ * @param {Function} props.onLoginClick - 用户头像点击事件处理函数
  * @returns {JSX.Element} 侧边栏导航组件
  */
-const Sidebar = () => {
+const Sidebar = ({ onLoginClick }) => {
   return (
     <div className="sidebar">
       {/* Logo区域 */}
@@ -39,12 +41,12 @@ const Sidebar = () => {
 
       {/* 用户头像 */}
       <div className="sidebar-profile">
-        <div className="profile-avatar">
+        <button type="button" className="profile-avatar" onClick={onLoginClick}>
           <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
-        </div>
+        </button>
       </div>
     </div>
   );

@@ -1,17 +1,31 @@
-/* 控制面板主容器样式 */
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  padding: 16px;
-  background-color: var(--secondary-color, #242438);
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+/* 在文件顶部添加全局盒模型设置 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
+/* 改进后的控制面板主容器 - 现代化网格布局，避免与其他组件重叠 */
+.controls {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--card-gap);
+  padding: var(--card-gap);
+  margin-bottom: var(--card-gap);
+  background-color: var(--secondary-color, #242438);
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 1;
+}
+
+/* 改进后的单个控制项卡片样式 */
 .control {
-  flex: 1;
-  min-width: 250px;
+  background-color: var(--card-bg, #2a2a3c);
+  border: 1px solid var(--border-color, #2d2d3a);
+  border-radius: 8px;
+  padding: 16px;
+  width: 100%;
 }
 
 /* 滑块控制样式 */
@@ -227,12 +241,10 @@
 /* 响应式设计 */
 @media (max-width: 768px) {
   .controls {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
 
-  .control {
-    min-width: 100%;
-  }
+  /* 可根据需要在更小屏幕折叠成一列 */
 }
 
 @media (max-width: 480px) {

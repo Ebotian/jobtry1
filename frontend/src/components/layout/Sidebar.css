@@ -6,7 +6,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.5rem 0;
+  padding: var(--card-gap) 0;
+  position: relative;
+  z-index: 2;
   border-right: 1px solid var(--border-color, #2d2d3a);
 }
 
@@ -24,7 +26,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.25rem;
+  gap: var(--card-gap);
   margin-bottom: auto;
 }
 
@@ -82,7 +84,7 @@
 @media (max-width: 768px) {
   .sidebar {
     width: var(--sidebar-width-mobile, 60px);
-    padding: 1rem 0;
+    padding: calc(var(--card-gap) / 2) 0;
   }
 
   .sidebar-logo {

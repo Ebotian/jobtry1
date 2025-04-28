@@ -12,6 +12,9 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* 在根变量中添加统一卡片间距 */
+  --card-gap: 12px;
 }
 
 /* 重置所有元素的默认样式 */
