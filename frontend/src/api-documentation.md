@@ -2,6 +2,181 @@
 
 This document provides comprehensive documentation for all available API endpoints in the backend. Frontend developers can use this as a reference when integrating with backend services.
 
+---
+
+# AI 智能服务接口（AI Service Endpoints）
+
+本节介绍与 AI 相关的所有接口，包括智能聊天、文本摘要、情感分析和主题提取。
+
+---
+
+## 1. 聊天接口 / Chat API
+
+**Endpoint:** `POST /api/ai/chat`
+
+**描述（Description）：**
+
+- 与 AI 进行对话，支持上下文历史。
+- Chat with AI, supporting context history.
+
+**请求体（Request Body）：**
+
+```json
+{
+	"message": "string (required)", // 当前用户输入 Current user message
+	"history": [
+		// 聊天历史（可选）Chat history (optional)
+		{ "role": "user|assistant", "content": "string" }
+	]
+}
+```
+
+**响应体（Response Body）：**
+返回 OpenAI/DeepSeek 标准格式。
+Returns standard OpenAI/DeepSeek format.
+
+```json
+{
+	"id": "chatcmpl-xxx",
+	"object": "chat.completion",
+	"created": 1714380000,
+	"model": "deepseek-chat",
+	"choices": [
+		{
+			"index": 0,
+			"message": {
+				"role": "assistant",
+				"content": "AI 回复内容..."
+			},
+			"finish_reason": "stop"
+		}
+	],
+	"usage": {
+		"prompt_tokens": 30,
+		"completion_tokens": 50,
+		"total_tokens": 80
+	}
+}
+```
+
+**错误响应（Error Response）：**
+
+```json
+{
+	"error": { "message": "AI 聊天错误: ..." }
+}
+```
+
+---
+
+## 2. 文本摘要接口 / Summarization API
+
+**Endpoint:** `POST /api/ai/summarize`
+
+**描述（Description）：**
+
+- 对输入文本生成简洁摘要。
+- Generate a concise summary for the input text.
+
+**请求体（Request Body）：**
+
+```json
+{
+	"text": "string (required)",
+	"options": {
+		/* 可选参数 optional */
+	}
+}
+```
+
+**响应体（Response Body）：**
+
+```json
+{
+	"summary": "string"
+}
+```
+
+---
+
+## 3. 情感分析接口 / Sentiment Analysis API
+
+**Endpoint:** `POST /api/ai/sentiment`
+
+**描述（Description）：**
+
+- 对文本进行情感分析，返回情感类型和分数。
+- Analyze sentiment of the text, returns type and score.
+
+**请求体（Request Body）：**
+
+```json
+{
+	"text": "string (required)"
+}
+```
+
+**响应体（Response Body）：**
+
+```json
+{
+	"sentiment": "积极|消极|中性 (positive|negative|neutral)",
+	"score": 0.85,
+	"details": "详细分析..."
+}
+```
+
+---
+
+## 4. 主题提取接口 / Topic Extraction API
+
+**Endpoint:** `POST /api/ai/topics`
+
+**描述（Description）：**
+
+- 提取文本中的主题关键词。
+- Extract main topics/keywords from text.
+
+**请求体（Request Body）：**
+
+```json
+{
+	"text": "string (required)",
+	"topN": 5 // 可选，返回主题数量 Optional, number of topics
+}
+```
+
+**响应体（Response Body）：**
+
+```json
+{
+  "topics": ["主题1", "主题2", ...]
+}
+```
+
+---
+
+## 通用错误响应（General Error Response）
+
+所有 AI 接口错误返回如下格式：
+All AI endpoints return errors in this format:
+
+```json
+{
+	"error": {
+		"message": "错误描述 Error description"
+	}
+}
+```
+
+---
+
+> **注意（Note）：**
+> 所有 AI 接口均为 RESTful，除 /summarize、/sentiment、/topics 需登录外，/chat 可公开访问。
+> All AI endpoints are RESTful. /summarize, /sentiment, /topics require authentication, /chat is public.
+
+---
+
 ## Base URL
 
 All API requests are prefixed with `/api`.
