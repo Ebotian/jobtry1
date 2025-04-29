@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import ReactMarkdown from 'react-markdown';
 
 /**
  * MessageItem 组件 - 单条消息的展示
@@ -9,11 +10,13 @@ import PropTypes from 'prop-types';
  * @param {string} props.message.type - 消息类型（'user' 或 'ai'）
  * @param {string} props.message.content - 消息内容
  * @param {Date|string} [props.message.timestamp] - 消息时间戳
+ * @param {Object} [props.message.rawResponse] - AI 的原始响应数据
  * @returns {JSX.Element} 消息项组件
  */
 const MessageItem = ({ message }) => {
-  const { type, content, timestamp } = message;
+  const { type, content, timestamp, rawResponse } = message;
   const isAi = type === 'ai';
+  const [showJson, setShowJson] = useState(false);
 
   /**
    * 格式化时间戳为可读形式
@@ -26,6 +29,9 @@ const MessageItem = ({ message }) => {
     const date = time instanceof Date ? time : new Date(time);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
+
+  // 判断是否可以切换显示 JSON
+  const canToggleJson = isAi && rawResponse;
 
   return (
     <div className={`message ${isAi ? 'ai-message' : 'user-message'}`}>
@@ -49,13 +55,28 @@ const MessageItem = ({ message }) => {
       </div>
       <div className="message-content">
         <div className="message-bubble">
-          {content}
+          {isAi && showJson && rawResponse ? (
+            <pre className="json-content">{typeof rawResponse === 'string' ? rawResponse : JSON.stringify(rawResponse)}</pre>
+          ) : (
+            <ReactMarkdown>{content}</ReactMarkdown>
+          )}
         </div>
-        {timestamp && (
-          <div className="message-time">
-            {formatTime(timestamp)}
-          </div>
-        )}
+        <div className="message-footer">
+          {timestamp && (
+            <span className="message-time">
+              {formatTime(timestamp)}
+            </span>
+          )}
+
+          {canToggleJson && (
+            <button
+              onClick={() => setShowJson(!showJson)}
+              className="toggle-json-btn"
+            >
+              {showJson ? '显示回复内容' : '显示原始结果'}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -63,9 +84,10 @@ const MessageItem = ({ message }) => {
 
 MessageItem.propTypes = {
   message: PropTypes.shape({
-    type: PropTypes.oneOf(['user', 'ai']).isRequired,
+    type: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
-    timestamp: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)])
+    timestamp: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
+    rawResponse: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
   }).isRequired
 };
 

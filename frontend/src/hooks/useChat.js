@@ -173,19 +173,28 @@ const useChat = (options = {}) => {
 					}));
 
 				// 调用 AI 服务获取回复
-				const response = await aiService.chatCompletion(
+				const response = await aiService.chatWithAI(
 					messageText,
 					messageHistory
 				);
 
-				// 添加 AI 回复到消息列表
-				if (response && response.response) {
-					addMessage(response.response, MessageType.AI);
+				// 兼容 OpenAI/DeepSeek 格式，提取 content
+				let aiContent = "";
+				if (
+					response.choices &&
+					response.choices[0] &&
+					response.choices[0].message &&
+					response.choices[0].message.content
+				) {
+					aiContent = response.choices[0].message.content;
 				} else {
-					throw new Error("AI 服务响应无效");
+					aiContent = JSON.stringify(response);
 				}
 
-				return { success: true, userMessage, aiResponse: response };
+				// 添加 AI 回复到消息列表，rawResponse 保留完整响应
+				addMessage(aiContent, MessageType.AI);
+
+				return { success: true, aiContent, rawResponse: response };
 			} catch (err) {
 				console.error("发送消息出错:", err);
 				setError(err.message || "发送消息失败，请稍后重试");

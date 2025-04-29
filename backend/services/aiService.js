@@ -257,7 +257,7 @@ class DeepSeekClient {
 			);
 			logger.debug(`聊天响应: ${JSON.stringify(response.data)}`);
 
-			return response.data.choices[0].message.content;
+			return response.data;
 		} catch (error) {
 			this.handleError(error);
 		}

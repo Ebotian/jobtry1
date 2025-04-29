@@ -93,6 +93,7 @@ const useChatStore = create(
 						type: "ai",
 						content: aiContent,
 						timestamp: new Date(),
+						rawResponse: response, // 存储原始响应
 					};
 
 					set((state) => ({

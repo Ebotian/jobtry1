@@ -56,7 +56,7 @@ router.post("/chat", async (req, res) => {
 			max_tokens: 1000,
 		});
 
-		res.json({ response });
+		res.json( response );
 	} catch (error) {
 		logger.error(`AI 聊天错误: ${error.message}`);
 		res
