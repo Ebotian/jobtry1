@@ -54,13 +54,44 @@ const useChatStore = create(
 					}));
 
 					// 调用 AI 服务
+					console.log("发送消息到 AI 服务:", content, recentMessages);
 					const response = await aiService.chatWithAI(content, recentMessages);
+					console.log("收到 AI 响应:", response);
+
+					// 确保 response 不为 null 或 undefined
+					if (!response) {
+						throw new Error("未收到 AI 服务响应");
+					}
 
 					// 添加 AI 回复
+					let aiContent = null;
+
+					// 尝试处理不同的响应格式
+					if (
+						response.choices &&
+						response.choices[0] &&
+						response.choices[0].message
+					) {
+						aiContent = response.choices[0].message.content;
+					} else if (response.response) {
+						aiContent = response.response;
+					} else if (typeof response === "string") {
+						aiContent = response;
+					} else if (typeof response === "object") {
+						// 尝试找到响应中的文本内容
+						aiContent = JSON.stringify(response);
+					}
+
+					// 如果所有尝试都失败，使用默认消息
+					if (!aiContent) {
+						aiContent = "抱歉，我现在无法回答这个问题。";
+						console.warn("无法从响应中提取内容:", response);
+					}
+
 					const aiMessage = {
 						id: uuidv4(),
 						type: "ai",
-						content: response.response || "抱歉，我现在无法回答这个问题。",
+						content: aiContent,
 						timestamp: new Date(),
 					};
 

@@ -40,7 +40,7 @@ const MessageList = ({ messages, isLoading = false }) => {
           </div>
           <div className="message-content">
             <div className="message-bubble typing">
-              <p>思考中...</p>
+              <p>思考中</p>
             </div>
           </div>
         </div>

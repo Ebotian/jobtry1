@@ -46,7 +46,12 @@ const ChatContainer = () => {
    * 滚动到消息列表底部
    */
   const scrollToBottom = () => {
-    messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messageEndRef.current) {
+      const messageListContainer = messageEndRef.current.parentElement;
+      if (messageListContainer) {
+        messageListContainer.scrollTop = messageListContainer.scrollHeight;
+      }
+    }
   };
 
   // 当消息列表更新时，滚动到底部

@@ -16,7 +16,7 @@ const ChatInput = ({ value, onChange, onSend, disabled = false }) => {
    * 处理键盘事件，按下Enter键发送消息
    * @param {React.KeyboardEvent} e - 键盘事件对象
    */
-  const handleKeyPress = (e) => {
+  const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault(); // 防止换行
       if (value.trim() && !disabled) {
@@ -41,7 +41,7 @@ const ChatInput = ({ value, onChange, onSend, disabled = false }) => {
         placeholder="在这里输入您的消息..."
         value={value}
         onChange={onChange}
-        onKeyPress={handleKeyPress}
+        onKeyDown={handleKeyDown}
         disabled={disabled}
         rows={1}
         autoFocus

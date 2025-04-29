@@ -17,7 +17,43 @@ export const chatWithAI = async (message, history = []) => {
 			message,
 			history,
 		});
-		return response.data;
+
+		// 检查响应数据的结构
+		console.log("AI 响应数据:", response.data);
+
+		// 验证响应格式
+		if (!response.data) {
+			throw new Error("AI 响应数据为空");
+		}
+
+		// 尝试处理不同的响应格式
+		if (
+			response.data.choices &&
+			response.data.choices[0] &&
+			response.data.choices[0].message
+		) {
+			// OpenAI 格式响应
+			return response.data;
+		} else if (response.data.response) {
+			// 简单格式响应
+			return response.data;
+		} else {
+			// 其他格式，可能需要适配
+			console.warn("未知的响应格式:", response.data);
+			// 构造一个兼容的响应格式
+			return {
+				choices: [
+					{
+						message: {
+							content:
+								typeof response.data === "string"
+									? response.data
+									: JSON.stringify(response.data),
+						},
+					},
+				],
+			};
+		}
 	} catch (error) {
 		console.error("AI 聊天请求失败:", error);
 		throw new Error(
