@@ -13,7 +13,7 @@ import { RequestQueue, RequestList } from "crawlee";
 import { promises as fs } from "fs";
 import path from "path";
 import logger from "../utils/logger.js";
-import  config  from "../config/env.js";
+import config from "../config/env.js";
 
 /**
  * 网站适配器基类 - 为不同网站提供特定的抓取逻辑
@@ -440,58 +440,40 @@ class CrawlerService {
 		const proxyConfiguration =
 			await this.proxyManager.createProxyConfiguration();
 
-		// 创建爬虫实例
-		const crawler = new PlaywrightCrawler({
+		// 构建爬虫参数对象
+		const crawlerOptions = {
 			requestList,
 			requestQueue,
-			proxyConfiguration,
 			maxConcurrency: this.settings.maxConcurrency,
 			maxRequestsPerMinute: this.settings.maxRequestsPerMinute,
 			maxRequestRetries: this.settings.maxRequestRetries,
 			navigationTimeoutSecs: this.settings.navigationTimeoutSecs,
-
-			// 浏览器选项
 			launchContext: {
 				launchOptions: {
 					headless: true,
 				},
 			},
-
-			// 请求处理器
 			async requestHandler({ page, request, crawler }) {
 				try {
-					// 随机等待以模拟人类行为
 					await page.waitForTimeout(Math.floor(Math.random() * 3000) + 1000);
-
-					// 使用适配器处理页面
 					const results = await adapter.handlePage({ page, request, crawler });
-
-					// 保存结果
 					if (Array.isArray(results)) {
 						for (const result of results) {
-							// 如果是链接，添加到队列继续爬取
 							if (result.type === "news_link" && result.url) {
 								await requestQueue.addRequest({ url: result.url });
-							}
-							// 否则保存为数据
-							else {
+							} else {
 								await Dataset.pushData(result);
 							}
 						}
 					}
-
 					logger.info(`成功抓取: ${request.url}`);
 				} catch (error) {
 					logger.error(`抓取失败 ${request.url}: ${error.message}`);
 					throw error;
 				}
 			},
-
-			// 失败回调
 			failedRequestHandler: async ({ request, error }) => {
 				logger.error(`请求失败 ${request.url}: ${error.message}`);
-
-				// 如果是代理相关错误，标记当前代理为无效
 				if (
 					error.message.includes("proxy") ||
 					error.message.includes("ECONNREFUSED") ||
@@ -500,8 +482,14 @@ class CrawlerService {
 					this.proxyManager.markCurrentProxyInvalid();
 				}
 			},
-		});
+		};
 
+		// 只有在 proxyConfiguration 存在时才添加该参数
+		if (proxyConfiguration) {
+			crawlerOptions.proxyConfiguration = proxyConfiguration;
+		}
+
+		const crawler = new PlaywrightCrawler(crawlerOptions);
 		return crawler;
 	}
 

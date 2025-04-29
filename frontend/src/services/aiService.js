@@ -9,14 +9,21 @@ import api from "./api";
  * 与 AI 进行聊天
  * @param {string} message - 用户消息
  * @param {Array} [history=[]] - 聊天历史记录
+ * @param {Object} [options={}] - 额外选项，如 creativity
  * @returns {Promise<Object>} - 聊天响应
  */
-export const chatWithAI = async (message, history = []) => {
+export const chatWithAI = async (message, history = [], options = {}) => {
 	try {
-		const response = await api.post("/ai/chat", {
+		// 支持传递 creativity 参数（映射为 temperature）
+		const payload = {
 			message,
 			history,
-		});
+		};
+		if (options.creativity !== undefined) {
+			// OpenAI/DeepSeek 的 temperature 范围通常是 0-1，这里假设前端 1-100
+			payload.creativity = options.creativity;
+		}
+		const response = await api.post("/ai/chat", payload);
 
 		// 直接返回后端完整 data
 		if (!response.data) {

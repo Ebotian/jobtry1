@@ -65,3 +65,15 @@ TypeError: logger.error is not a function
 [2025-04-28 22:12:31] ERROR: 自定义AI分析错误: AI服务请求失败: Request failed with status code 404
 [2025-04-28 22:12:31] ERROR: AI 聊天错误: AI服务请求失败: Request failed with status code 404
 [2025-04-28 22:19:37] ERROR: AI 聊天错误: aiService.chat is not a function
+[2025-04-29 20:19:14] ERROR: 爬虫任务失败: Expected property `proxyConfiguration` to be of type `object` but received type `null`
+Expected argument 'object `proxyConfiguration`' to be a ProxyConfiguration, got something else. in object `PlaywrightCrawlerOptions`
+[2025-04-29 20:21:51] ERROR: 爬虫任务失败: Expected property `proxyConfiguration` to be of type `object` but received type `null`
+Expected argument 'object `proxyConfiguration`' to be a ProxyConfiguration, got something else. in object `PlaywrightCrawlerOptions`
+[2025-04-29 20:22:02] ERROR: 爬虫任务失败: Cannot find module 'playwright'
+Require stack:
+- /home/ebit/jobtry1/backend/node_modules/@crawlee/browser/internals/browser-launcher.js
+[2025-04-29 20:23:31] ERROR: 爬虫任务失败: Failed to launch browser. Please check the following:
+- Try installing the required dependencies by running `npx playwright install --with-deps` (https://playwright.dev/docs/browsers).
+
+The original error is available in the `cause` property. Below is the error received when trying to launch a browser:
+​

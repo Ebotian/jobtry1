@@ -9,9 +9,11 @@ import '../chat/Chat.css';
  * ChatContainer 组件 - 聊天界面的容器组件
  * 管理消息列表、消息输入和发送功能
  *
+ * @param {Object} props - 组件属性
+ * @param {number} props.creativity - 创造力参数
  * @returns {JSX.Element} 聊天容器组件
  */
-const ChatContainer = () => {
+const ChatContainer = ({ creativity }) => {
   // 使用全局状态管理
   const { messages, isLoading, sendMessage } = useChatStore();
 
@@ -27,8 +29,8 @@ const ChatContainer = () => {
    */
   const handleSendMessage = (content) => {
     if (content.trim()) {
-      // 调用全局状态中的发送方法
-      sendMessage(content);
+      // 传递 creativity 参数到 sendMessage
+      sendMessage(content, { creativity });
       // 清空输入框
       setInputMessage('');
     }

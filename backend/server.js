@@ -12,6 +12,8 @@ import authRoutes from "./routes/authRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js"; // 导入 AI 路由
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { logger } from "./utils/logger.js";
+import crawlerRoutes from './routes/crawlerRoutes.js';
+
 
 // 加载环境变量
 dotenv.config();
@@ -38,6 +40,7 @@ app.use((req, res, next) => {
 app.use("/api/tasks", taskRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/ai", aiRoutes); // 添加 AI 路由
+app.use('/api/crawler', crawlerRoutes);
 
 // 健康检查路由
 app.get("/health", (req, res) => {

@@ -147,10 +147,11 @@ const useChat = (options = {}) => {
 	/**
 	 * 发送消息到 AI 服务并获取回复
 	 * @param {string} messageText - 用户消息文本
+	 * @param {Object} [options={}] - 额外选项，如 creativity
 	 * @returns {Promise<Object>} 包含发送状态的对象
 	 */
 	const sendMessage = useCallback(
-		async (messageText) => {
+		async (messageText, options = {}) => {
 			if (!messageText.trim()) return { success: false };
 
 			try {
@@ -172,10 +173,11 @@ const useChat = (options = {}) => {
 						content: msg.content,
 					}));
 
-				// 调用 AI 服务获取回复
+				// 调用 AI 服务获取回复，支持 options
 				const response = await aiService.chatWithAI(
 					messageText,
-					messageHistory
+					messageHistory,
+					options
 				);
 
 				// 兼容 OpenAI/DeepSeek 格式，提取 content

@@ -35,6 +35,9 @@ const MainLayout = () => {
 
   const [isLoginOpen, setLoginOpen] = useState(false);
 
+  // 创意性状态提升到 MainLayout
+  const [creativity, setCreativity] = useState(50);
+
   return (
     <div className="app-layout">
       {/* 左侧侧边栏 */}
@@ -43,7 +46,7 @@ const MainLayout = () => {
       {/* 右侧内容区域 */}
       <div className="content">
         {/* 聊天界面 */}
-        <ChatContainer />
+        <ChatContainer creativity={creativity} />
 
         {/* 摘要卡片 - 使用新创建的SummaryCard组件 */}
         <SummaryCard
@@ -58,7 +61,7 @@ const MainLayout = () => {
         />
 
         {/* 控制面板 */}
-        <ControlPanel />
+        <ControlPanel creativity={creativity} setCreativity={setCreativity} />
       </div>
       <LoginPopup isOpen={isLoginOpen} onClose={() => setLoginOpen(false)} />
     </div>

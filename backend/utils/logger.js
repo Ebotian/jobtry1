@@ -149,8 +149,4 @@ export const httpLogger = (req, res, next) => {
 	next();
 };
 
-export default {
-	logger,
-	log,
-	httpLogger,
-};
+export default logger;

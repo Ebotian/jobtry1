@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './Controls.css';
 import SliderControl from './SliderControl';
 import KeywordTags from './KeywordTags';
+import { startCrawling } from '../../services/crawlerService';
 
 /**
  * 控制面板组件 - 包含创意性滑块和关键词标签
@@ -9,10 +10,7 @@ import KeywordTags from './KeywordTags';
  *
  * @returns {JSX.Element} 控制面板组件
  */
-const ControlPanel = () => {
-  // 创意性状态 - 控制AI生成内容的创造性
-  const [creativity, setCreativity] = useState(50);
-
+const ControlPanel = ({ creativity, setCreativity }) => {
   // 关键词状态 - 用于内容分析的关键词列表
   const [keywords, setKeywords] = useState([]);
 
@@ -20,13 +18,8 @@ const ControlPanel = () => {
   const [showAddKeyword, setShowAddKeyword] = useState(false);
   const [newKeyword, setNewKeyword] = useState('');
 
-  /**
-   * 处理创意性滑块变化
-   * @param {number} value - 新的创意性值
-   */
-  const handleCreativityChange = (value) => {
-    setCreativity(value);
-  };
+  // 爬取状态
+  const [loading, setLoading] = useState(false);
 
   /**
    * 添加新关键词
@@ -71,11 +64,11 @@ const ControlPanel = () => {
       {/* 创意性滑块控制 */}
       <div className="control slider-control">
         <SliderControl
-          label="分析创意性"
-          value={creativity}
-          onChange={handleCreativityChange}
+          label="创意性"
           min={1}
           max={100}
+          value={creativity}
+          onChange={setCreativity}
         />
       </div>
 
@@ -92,6 +85,24 @@ const ControlPanel = () => {
           onAddKeyword={handleAddKeyword}
           onKeyPress={handleKeyPress}
         />
+        {/* 爬取按钮 */}
+        <button
+          className="crawl-btn"
+          style={{ marginTop: 12 }}
+          disabled={keywords.length === 0 || loading}
+          onClick={async () => {
+            setLoading(true);
+            try {
+              const result = await startCrawling({ keywords, type: 'weibo' });
+              alert('爬取成功，获取到 ' + (Array.isArray(result) ? result.length : 0) + ' 条数据');
+            } catch (e) {
+              alert('爬取失败: ' + (e?.response?.data?.error?.message || e.message));
+            }
+            setLoading(false);
+          }}
+        >
+          {loading ? '正在爬取...' : '开始爬取'}
+        </button>
       </div>
     </div>
   );

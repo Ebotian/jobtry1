@@ -50,22 +50,26 @@ router.post("/chat", async (req, res) => {
 
 		logger.debug(`发送 DeepSeek 聊天请求: ${JSON.stringify(messages)}`);
 
+		// 支持前端传递 creativity 参数，映射为 temperature
+		const temperature =
+			req.body.creativity !== undefined
+				? Math.max(0, Math.min(1, req.body.creativity / 100))
+				: 0.7;
+
 		// 使用新的 chat 方法发送请求到 DeepSeek API
 		const response = await aiService.chat(messages, {
-			temperature: 0.7,
+			temperature,
 			max_tokens: 1000,
 		});
 
-		res.json( response );
+		res.json(response);
 	} catch (error) {
 		logger.error(`AI 聊天错误: ${error.message}`);
-		res
-			.status(500)
-			.json({
-				error: {
-					message: `AI 聊天错误: ${error.message}` || "AI 服务暂时不可用",
-				},
-			});
+		res.status(500).json({
+			error: {
+				message: `AI 聊天错误: ${error.message}` || "AI 服务暂时不可用",
+			},
+		});
 	}
 });
 

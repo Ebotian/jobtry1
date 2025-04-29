@@ -28,8 +28,9 @@ const useChatStore = create(
 			/**
 			 * 发送消息到 AI
 			 * @param {string} content - 消息内容
+			 * @param {Object} [options] - 附加选项（如 creativity）
 			 */
-			sendMessage: async (content) => {
+			sendMessage: async (content, options = {}) => {
 				try {
 					// 先添加用户消息
 					const userMessage = {
@@ -53,9 +54,13 @@ const useChatStore = create(
 						content: msg.content,
 					}));
 
-					// 调用 AI 服务
-					console.log("发送消息到 AI 服务:", content, recentMessages);
-					const response = await aiService.chatWithAI(content, recentMessages);
+					// 调用 AI 服务，支持 creativity 参数
+					console.log("发送消息到 AI 服务:", content, recentMessages, options);
+					const response = await aiService.chatWithAI(
+						content,
+						recentMessages,
+						options
+					);
 					console.log("收到 AI 响应:", response);
 
 					// 确保 response 不为 null 或 undefined

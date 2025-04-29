@@ -19,10 +19,10 @@ const ChartContainer = ({ wordCloudData = [], mermaidDefinition = '' }) => (
       <LeftChart data={wordCloudData} />
     </div>
     {/* 右侧 Mermaid 图表 */}
-    <div className="chart-panel mermaid-panel">
+    {/* <div className="chart-panel mermaid-panel">
       <h3 className="chart-title">AI 分析图表</h3>
       <RightChart definition={mermaidDefinition} />
-    </div>
+    </div> */}
   </div>
 );
 

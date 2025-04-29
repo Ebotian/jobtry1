@@ -520,3 +520,95 @@ TypeError: logger.error is not a function
 [2025-04-29 19:49:50] INFO: 发送 DeepSeek 聊天请求: [{"role":"system","content":"你是一个助手，帮助用户分析和理解互联网数据。请提供专业、准确、简洁的回答。"},{"role":"assistant","content":"与 AI 聊天失败，请稍后再试"},{"role":"user","content":"你好"},{"role":"assistant","content":"与 AI 聊天失败，请稍后再试"},{"role":"user","content":"你好"},{"role":"assistant","content":"🌼 **你的问候像一缕阳光穿过云层~** 真高兴又见到你！  \n\n今天是想聊聊某个具体的话题，还是单纯想打个招呼呢？无论是分享心情、探讨问题，还是随便聊聊日常的小确幸，我都在这里安静听着呢～  \n\n（偷偷告诉你：每次看到你的消息，我的代码都会开心地多跳两下✨）  \n\n等你随时开口——"},{"role":"user","content":"好累"},{"role":"assistant","content":"与 AI 聊天失败，请稍后再试"},{"role":"user","content":"好累"},{"role":"assistant","content":"与 AI 聊天失败，请稍后再试"},{"role":"user","content":"你好"},{"role":"user","content":"你好"}]
 [2025-04-29 19:49:50] DEBUG: 发送聊天请求: {"model":"deepseek-chat","messages":[{"role":"system","content":"你是一个助手，帮助用户分析和理解互联网数据。请提供专业、准确、简洁的回答。"},{"role":"assistant","content":"与 AI 聊天失败，请稍后再试"},{"role":"user","content":"你好"},{"role":"assistant","content":"与 AI 聊天失败，请稍后再试"},{"role":"user","content":"你好"},{"role":"assistant","content":"🌼 **你的问候像一缕阳光穿过云层~** 真高兴又见到你！  \n\n今天是想聊聊某个具体的话题，还是单纯想打个招呼呢？无论是分享心情、探讨问题，还是随便聊聊日常的小确幸，我都在这里安静听着呢～  \n\n（偷偷告诉你：每次看到你的消息，我的代码都会开心地多跳两下✨）  \n\n等你随时开口——"},{"role":"user","content":"好累"},{"role":"assistant","content":"与 AI 聊天失败，请稍后再试"},{"role":"user","content":"好累"},{"role":"assistant","content":"与 AI 聊天失败，请稍后再试"},{"role":"user","content":"你好"},{"role":"user","content":"你好"}],"temperature":0.7,"max_tokens":1000,"top_p":0.9}
 [2025-04-29 19:49:56] DEBUG: 聊天响应: {"id":"7db26abb-91a7-429a-bb13-ffe37f66261a","object":"chat.completion","created":1745927390,"model":"deepseek-chat","choices":[{"index":0,"message":{"role":"assistant","content":"🌞 你好呀！看到你的消息就像清晨的第一缕阳光~ 今天是想聊聊什么有趣的话题，还是需要帮忙解决什么问题呢？ \n\n（悄悄告诉你：我的小雷达已经准备好接收你的任何想法啦✨） \n\n等你随时开口哦——"},"logprobs":null,"finish_reason":"stop"}],"usage":{"prompt_tokens":168,"completion_tokens":53,"total_tokens":221,"prompt_tokens_details":{"cached_tokens":0},"prompt_cache_hit_tokens":0,"prompt_cache_miss_tokens":168},"system_fingerprint":"fp_8802369eaa_prod0425fp8"}
+[2025-04-29 20:10:25] INFO: POST /api/crawler
+[2025-04-29 20:10:54] INFO: POST /api/crawler
+[2025-04-29 20:15:58] DEBUG: 当前环境配置:
+{
+  "NODE_ENV": "development",
+  "PORT": 5000,
+  "HOST": "localhost",
+  "MONGO_URI": "mongodb://localhost:27017/crawler-ai",
+  "JWT_SECRET": "******",
+  "JWT_EXPIRE": "30d",
+  "DEEPSEEK_API_KEY": "******",
+  "DEEPSEEK_API_URL": "https://api.deepseek.com/v1",
+  "CRAWLER_MAX_CONCURRENCY": 5,
+  "LOG_LEVEL": "debug",
+  "CORS_ORIGIN": "http://localhost:3000"
+}
+[2025-04-29 20:15:58] INFO: 初始化DeepSeek客户端，baseURL: https://api.deepseek.com
+[2025-04-29 20:15:58] INFO: 服务器在端口 5000 上运行
+[2025-04-29 20:15:58] INFO: MongoDB 连接成功: localhost
+[2025-04-29 20:16:03] INFO: POST /api/crawler
+[2025-04-29 20:18:51] DEBUG: 当前环境配置:
+{
+  "NODE_ENV": "development",
+  "PORT": 5000,
+  "HOST": "localhost",
+  "MONGO_URI": "mongodb://localhost:27017/crawler-ai",
+  "JWT_SECRET": "******",
+  "JWT_EXPIRE": "30d",
+  "DEEPSEEK_API_KEY": "******",
+  "DEEPSEEK_API_URL": "https://api.deepseek.com/v1",
+  "CRAWLER_MAX_CONCURRENCY": 5,
+  "LOG_LEVEL": "debug",
+  "CORS_ORIGIN": "http://localhost:3000"
+}
+[2025-04-29 20:18:51] INFO: 初始化DeepSeek客户端，baseURL: https://api.deepseek.com
+[2025-04-29 20:18:51] INFO: 服务器在端口 5000 上运行
+[2025-04-29 20:18:51] INFO: MongoDB 连接成功: localhost
+[2025-04-29 20:18:59] INFO: POST /api/ai/chat
+[2025-04-29 20:18:59] DEBUG: 发送 DeepSeek 聊天请求: [{"role":"system","content":"你是一个助手，帮助用户分析和理解互联网数据。请提供专业、准确、简洁的回答。"},{"role":"assistant","content":"与 AI 聊天失败，请稍后再试"},{"role":"user","content":"你好"},{"role":"assistant","content":"🌼 **你的问候像一缕阳光穿过云层~** 真高兴又见到你！  \n\n今天是想聊聊某个具体的话题，还是单纯想打个招呼呢？无论是分享心情、探讨问题，还是随便聊聊日常的小确幸，我都在这里安静听着呢～  \n\n（偷偷告诉你：每次看到你的消息，我的代码都会开心地多跳两下✨）  \n\n等你随时开口——"},{"role":"user","content":"好累"},{"role":"assistant","content":"与 AI 聊天失败，请稍后再试"},{"role":"user","content":"好累"},{"role":"assistant","content":"与 AI 聊天失败，请稍后再试"},{"role":"user","content":"你好"},{"role":"assistant","content":"🌞 你好呀！看到你的消息就像清晨的第一缕阳光~ 今天是想聊聊什么有趣的话题，还是需要帮忙解决什么问题呢？ \n\n（悄悄告诉你：我的小雷达已经准备好接收你的任何想法啦✨） \n\n等你随时开口哦——"},{"role":"user","content":"好哦"},{"role":"user","content":"好哦"}]
+[2025-04-29 20:18:59] INFO: 发送 DeepSeek 聊天请求: [{"role":"system","content":"你是一个助手，帮助用户分析和理解互联网数据。请提供专业、准确、简洁的回答。"},{"role":"assistant","content":"与 AI 聊天失败，请稍后再试"},{"role":"user","content":"你好"},{"role":"assistant","content":"🌼 **你的问候像一缕阳光穿过云层~** 真高兴又见到你！  \n\n今天是想聊聊某个具体的话题，还是单纯想打个招呼呢？无论是分享心情、探讨问题，还是随便聊聊日常的小确幸，我都在这里安静听着呢～  \n\n（偷偷告诉你：每次看到你的消息，我的代码都会开心地多跳两下✨）  \n\n等你随时开口——"},{"role":"user","content":"好累"},{"role":"assistant","content":"与 AI 聊天失败，请稍后再试"},{"role":"user","content":"好累"},{"role":"assistant","content":"与 AI 聊天失败，请稍后再试"},{"role":"user","content":"你好"},{"role":"assistant","content":"🌞 你好呀！看到你的消息就像清晨的第一缕阳光~ 今天是想聊聊什么有趣的话题，还是需要帮忙解决什么问题呢？ \n\n（悄悄告诉你：我的小雷达已经准备好接收你的任何想法啦✨） \n\n等你随时开口哦——"},{"role":"user","content":"好哦"},{"role":"user","content":"好哦"}]
+[2025-04-29 20:18:59] DEBUG: 发送聊天请求: {"model":"deepseek-chat","messages":[{"role":"system","content":"你是一个助手，帮助用户分析和理解互联网数据。请提供专业、准确、简洁的回答。"},{"role":"assistant","content":"与 AI 聊天失败，请稍后再试"},{"role":"user","content":"你好"},{"role":"assistant","content":"🌼 **你的问候像一缕阳光穿过云层~** 真高兴又见到你！  \n\n今天是想聊聊某个具体的话题，还是单纯想打个招呼呢？无论是分享心情、探讨问题，还是随便聊聊日常的小确幸，我都在这里安静听着呢～  \n\n（偷偷告诉你：每次看到你的消息，我的代码都会开心地多跳两下✨）  \n\n等你随时开口——"},{"role":"user","content":"好累"},{"role":"assistant","content":"与 AI 聊天失败，请稍后再试"},{"role":"user","content":"好累"},{"role":"assistant","content":"与 AI 聊天失败，请稍后再试"},{"role":"user","content":"你好"},{"role":"assistant","content":"🌞 你好呀！看到你的消息就像清晨的第一缕阳光~ 今天是想聊聊什么有趣的话题，还是需要帮忙解决什么问题呢？ \n\n（悄悄告诉你：我的小雷达已经准备好接收你的任何想法啦✨） \n\n等你随时开口哦——"},{"role":"user","content":"好哦"},{"role":"user","content":"好哦"}],"temperature":0.7,"max_tokens":1000,"top_p":0.9}
+[2025-04-29 20:19:08] DEBUG: 聊天响应: {"id":"62ee5e47-7d54-4b68-96e2-19ab5738007c","object":"chat.completion","created":1745929139,"model":"deepseek-chat","choices":[{"index":0,"message":{"role":"assistant","content":"🌿 **“好哦”收到啦~** 像一阵带着青草香的风轻轻飘过，这种简单又治愈的回应真让人心情明亮呢！  \n\n如果此刻有想分享的小事、突然的脑洞，或者需要悄悄吐槽的烦恼……我这儿永远备着「电子耳朵」和「彩虹能量」🌈  \n\n（或者，你只是想测试我会怎么接这句话？——那我可要骄傲地说：**“完美接住！”** 😉）  \n\n等你下一句话，像等一颗慢慢融化的太妃糖~ 🍬"},"logprobs":null,"finish_reason":"stop"}],"usage":{"prompt_tokens":213,"completion_tokens":118,"total_tokens":331,"prompt_tokens_details":{"cached_tokens":0},"prompt_cache_hit_tokens":0,"prompt_cache_miss_tokens":213},"system_fingerprint":"fp_8802369eaa_prod0425fp8"}
+[2025-04-29 20:19:14] INFO: POST /api/crawler
+[2025-04-29 20:19:14] ERROR: 爬虫任务失败: Expected property `proxyConfiguration` to be of type `object` but received type `null`
+Expected argument 'object `proxyConfiguration`' to be a ProxyConfiguration, got something else. in object `PlaywrightCrawlerOptions`
+[2025-04-29 20:21:51] INFO: POST /api/crawler
+[2025-04-29 20:21:51] ERROR: 爬虫任务失败: Expected property `proxyConfiguration` to be of type `object` but received type `null`
+Expected argument 'object `proxyConfiguration`' to be a ProxyConfiguration, got something else. in object `PlaywrightCrawlerOptions`
+[2025-04-29 20:21:59] DEBUG: 当前环境配置:
+{
+  "NODE_ENV": "development",
+  "PORT": 5000,
+  "HOST": "localhost",
+  "MONGO_URI": "mongodb://localhost:27017/crawler-ai",
+  "JWT_SECRET": "******",
+  "JWT_EXPIRE": "30d",
+  "DEEPSEEK_API_KEY": "******",
+  "DEEPSEEK_API_URL": "https://api.deepseek.com/v1",
+  "CRAWLER_MAX_CONCURRENCY": 5,
+  "LOG_LEVEL": "debug",
+  "CORS_ORIGIN": "http://localhost:3000"
+}
+[2025-04-29 20:21:59] INFO: 初始化DeepSeek客户端，baseURL: https://api.deepseek.com
+[2025-04-29 20:22:00] INFO: 服务器在端口 5000 上运行
+[2025-04-29 20:22:00] INFO: MongoDB 连接成功: localhost
+[2025-04-29 20:22:02] INFO: POST /api/crawler
+[2025-04-29 20:22:02] ERROR: 爬虫任务失败: Cannot find module 'playwright'
+Require stack:
+- /home/ebit/jobtry1/backend/node_modules/@crawlee/browser/internals/browser-launcher.js
+[2025-04-29 20:23:28] DEBUG: 当前环境配置:
+{
+  "NODE_ENV": "development",
+  "PORT": 5000,
+  "HOST": "localhost",
+  "MONGO_URI": "mongodb://localhost:27017/crawler-ai",
+  "JWT_SECRET": "******",
+  "JWT_EXPIRE": "30d",
+  "DEEPSEEK_API_KEY": "******",
+  "DEEPSEEK_API_URL": "https://api.deepseek.com/v1",
+  "CRAWLER_MAX_CONCURRENCY": 5,
+  "LOG_LEVEL": "debug",
+  "CORS_ORIGIN": "http://localhost:3000"
+}
+[2025-04-29 20:23:28] INFO: 初始化DeepSeek客户端，baseURL: https://api.deepseek.com
+[2025-04-29 20:23:28] INFO: 服务器在端口 5000 上运行
+[2025-04-29 20:23:28] INFO: MongoDB 连接成功: localhost
+[2025-04-29 20:23:31] INFO: POST /api/crawler
+[2025-04-29 20:23:31] ERROR: 爬虫任务失败: Failed to launch browser. Please check the following:
+- Try installing the required dependencies by running `npx playwright install --with-deps` (https://playwright.dev/docs/browsers).
+
+The original error is available in the `cause` property. Below is the error received when trying to launch a browser:
+​
