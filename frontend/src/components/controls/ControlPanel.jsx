@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './ControlPanel.css';
+import * as taskService from '../api/taskService';
 
 const defaultConfig = {
   keyword: '',
@@ -11,10 +12,18 @@ const defaultConfig = {
 const ControlPanel = ({ onConfigChange }) => {
   const [config, setConfig] = useState(defaultConfig);
 
-  const handleChange = (e) => {
+  // 自动提交参数到后端
+  const handleChange = async (e) => {
     const { name, value } = e.target;
-    setConfig((prev) => ({ ...prev, [name]: value }));
-    if (onConfigChange) onConfigChange({ ...config, [name]: value });
+    const newConfig = { ...config, [name]: value };
+    setConfig(newConfig);
+    if (onConfigChange) onConfigChange(newConfig);
+    try {
+      await taskService.createOrUpdateTask(newConfig);
+    } catch (err) {
+      // 可选：错误处理
+      console.error('任务参数提交失败', err);
+    }
   };
 
   return (

@@ -1,9 +1,8 @@
-import express from "express";
 import dotenv from "dotenv";
+dotenv.config();
+import express from "express";
 import "./config/db.js";
 import taskRoutes from "./routes/taskRoutes.js";
-
-dotenv.config();
 
 const app = express();
 

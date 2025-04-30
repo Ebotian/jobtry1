@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import './ChatContainer.css';
+import * as taskService from '../api/taskService';
 
 const INIT_MSG = [
   { role: 'ai', text: '您好！请在下方输入您的问题或需求。' }
@@ -17,20 +18,26 @@ const ChatContainer = () => {
     }
   }, [messages]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return;
     setMessages(prev => [
       ...prev,
       { role: 'user', text: input }
     ]);
-    // 模拟AI回复
-    setTimeout(() => {
+    setInput('');
+    try {
+      // 假设任务ID为 'default'，可根据实际情况调整
+      const result = await taskService.getTaskResult('default');
       setMessages(prev => [
         ...prev,
-        { role: 'ai', text: 'AI正在处理您的请求：' + input }
+        { role: 'ai', text: result?.summary || 'AI暂无分析结果' }
       ]);
-    }, 600);
-    setInput('');
+    } catch (err) {
+      setMessages(prev => [
+        ...prev,
+        { role: 'ai', text: '获取AI分析失败' }
+      ]);
+    }
   };
 
   const handleKeyDown = (e) => {

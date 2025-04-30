@@ -1,14 +1,20 @@
-import axios from "axios";
+import OpenAI from "openai";
 
-// 调用 DeepSeek AI API 进行分析
+const openai = new OpenAI({
+  baseURL: process.env.DEEPSEEK_API_URL || "https://api.deepseek.com",
+  apiKey: process.env.DEEPSEEK_API_KEY
+});
+
+// rawData: 新闻内容数组，taskConfig: 任务参数
 export const analyze = async (rawData, taskConfig) => {
-  // 这里假设 rawData 是新闻内容数组，taskConfig 包含分析参数
-  const apiKey = process.env.DEEPSEEK_API_KEY;
-  const endpoint = process.env.DEEPSEEK_API_URL || "https://api.deepseek.com/analyze";
-  const response = await axios.post(
-    endpoint,
-    { data: rawData, config: taskConfig },
-    { headers: { Authorization: `Bearer ${apiKey}` } }
-  );
-  return response.data; // 返回结构化AI分析结果
+  const prompt = rawData.map(item => item.title + "\n" + (item.content || "")).join("\n\n");
+  const completion = await openai.chat.completions.create({
+    messages: [
+      { role: "system", content: "你是一个新闻分析助手，请对以下新闻内容进行结构化摘要和要点提取。" },
+      { role: "user", content: prompt }
+    ],
+    model: "deepseek-chat", // 或 deepseek-reasoner
+    ...taskConfig // 可扩展参数
+  });
+  return completion.choices[0].message; // 返回AI分析结果
 };
