@@ -17,11 +17,11 @@ const MainLayout = () => {
       {/* 主内容区域 */}
       <main className="content">
         {/* 顶部：任务参数配置 */}
-        <section className="control-panel">
+        <section className="control-panel" id="section-home">
           <ControlPanel />
         </section>
         {/* 中部：聊天界面和摘要 */}
-        <section className="chat-summary">
+        <section className="chat-summary" id="section-analysis">
           <div className="chat-container">
             <ChatContainer />
           </div>
@@ -34,10 +34,12 @@ const MainLayout = () => {
           <div className="chart-container">
             <ChartContainer />
           </div>
-          <div className="history-panel">
+          <div className="history-panel" id="section-history">
             <HistoryPanel />
           </div>
         </section>
+        {/* 设置区域预留 */}
+        <section style={{display:'none'}} id="section-settings"></section>
       </main>
     </div>
   );

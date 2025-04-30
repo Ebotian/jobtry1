@@ -1,0 +1,39 @@
+.summary-root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-title {
+  font-size: 1.12rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #232946;
+  letter-spacing: 1px;
+}
+
+.summary-content {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(44, 62, 80, 0.06);
+  padding: 18px 16px;
+  color: #232946;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  min-height: 80px;
+  word-break: break-all;
+}
+
+@media (max-width: 600px) {
+  .summary-title {
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+
+  .summary-content {
+    padding: 10px 6px;
+    font-size: 0.97rem;
+    min-height: 50px;
+  }
+}
