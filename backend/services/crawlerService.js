@@ -140,6 +140,16 @@ class NewsAdapter extends SiteAdapter {
 				title: "h1.post_title",
 				content: "div.post_body",
 			},
+			{
+				domain: "news.qq.com",
+				title: "h1",
+				content: ".content-article",
+			},
+			{
+				domain: "www.chinanews.com.cn",
+				title: "h1",
+				content: ".left_zw",
+			},
 		];
 	}
 
