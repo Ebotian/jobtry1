@@ -21,13 +21,13 @@ const ControlPanel = ({ config, onConfigChange }) => {
 	return (
 		<div className="control-panel-root">
 			<div className="control-group">
-				<label htmlFor="keyword">关键词</label>
+				<label htmlFor="analysisKeyword">分析关键词</label>
 				<input
-					id="keyword"
-					name="keyword"
+					id="analysisKeyword"
+					name="analysisKeyword"
 					type="text"
-					placeholder="->在这里输入<-"
-					value={config.keyword}
+					placeholder="如：AI、科技、社会..."
+					value={config.analysisKeyword || ""}
 					onChange={handleChange}
 				/>
 			</div>
@@ -46,17 +46,33 @@ const ControlPanel = ({ config, onConfigChange }) => {
 				</select>
 			</div>
 			<div className="control-group">
-				<label htmlFor="taskType">任务类型</label>
+				<label htmlFor="site">爬取站点</label>
 				<select
-					id="taskType"
-					name="taskType"
-					value={config.taskType}
+					id="site"
+					name="site"
+					value={config.site}
 					onChange={handleChange}
 				>
-					<option value="news">新闻汇总</option>
-					<option value="hot">热点追踪</option>
-					<option value="social">社交分析</option>
+					<option value="thepaper.cn">澎湃新闻</option>
+					<option value="jiemian.com">界面新闻</option>
+					<option value="bjnews.com.cn">新京报</option>
 				</select>
+			</div>
+			<div className="control-group">
+				<label htmlFor="manual-crawl">&nbsp;</label>
+				<button
+					id="manual-crawl"
+					className="manual-crawl-btn"
+					onClick={async () => {
+						// 1. 保存参数
+						const task = await taskService.createOrUpdateTask(config);
+						// 2. 立即执行
+						await axios.post(`/api/tasks/${task._id}/execute`);
+						alert("已立即执行爬取任务！");
+					}}
+				>
+					手动爬取
+				</button>
 			</div>
 		</div>
 	);

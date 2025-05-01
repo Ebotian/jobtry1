@@ -8,7 +8,7 @@ import HistoryPanel from "../history/HistoryPanel";
 import { useState } from "react";
 
 const defaultConfig = {
-	keyword: "",
+  analysisKeyword: "",
 	interval: 60,
 	site: "thepaper.cn",
 	taskType: "news",

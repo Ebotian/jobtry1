@@ -5,7 +5,8 @@ import {
 	getTaskById,
 	startTask,
 	stopTask,
-	getTaskResult,
+  getTaskResult,
+  executeTaskOnce,
 } from "../controllers/taskController.js";
 
 const router = Router();
@@ -22,5 +23,7 @@ router.post("/:id/start", startTask);
 router.post("/:id/stop", stopTask);
 // 查询任务结果
 router.get("/:id/result", getTaskResult);
+// 立即执行一次任务
+router.post("/:id/execute", executeTaskOnce);
 
 export default router;

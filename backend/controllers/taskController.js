@@ -60,3 +60,12 @@ export const getTaskResult = async (req, res, next) => {
 		next(err);
 	}
 };
+
+export const executeTaskOnce = async (req, res, next) => {
+  try {
+    const result = await taskService.executeTaskOnce(req.params.id);
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+};

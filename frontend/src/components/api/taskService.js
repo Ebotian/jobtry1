@@ -3,8 +3,13 @@ import axios from "axios";
 const API_BASE = "/api/tasks";
 
 // 创建/更新任务配置
-export const createOrUpdateTask = async (taskConfig) => {
-	const response = await axios.post(`${API_BASE}/config`, taskConfig);
+export const createOrUpdateTask = async (config) => {
+	// 生成唯一任务名，建议用 site-分析关键词 组合
+	const name = `${config.site}-${config.analysisKeyword || ""}`;
+	const response = await axios.post(`${API_BASE}/config`, {
+		name,
+		config,
+	});
 	return response.data;
 };
 

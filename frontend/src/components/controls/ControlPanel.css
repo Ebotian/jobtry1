@@ -34,13 +34,35 @@
   background: #f8fafc;
   transition: border 0.2s;
   outline: none;
-  color: #232946; /* 深色字体，确保可见 */
+  color: #232946;
+  /* 深色字体，确保可见 */
 }
 
 .control-group input:focus,
 .control-group select:focus {
   border: 1.5px solid #3b4a6b;
   background: #fff;
+}
+
+.manual-crawl-btn {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #232946;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+  height: 38px;
+  /* 与其他输入框保持一致高度 */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.manual-crawl-btn:hover {
+  background: #3b4a6b;
 }
 
 @media (max-width: 1100px) {
@@ -60,6 +82,13 @@
 
   .control-group {
     min-width: 120px;
+  }
+
+  .manual-crawl-btn {
+    margin-left: 0;
+    margin-top: 10px;
+    width: 100%;
+    font-size: 0.98rem;
   }
 }
 
