@@ -7,10 +7,11 @@ const openai = new OpenAI({
 
 // rawData: 新闻内容数组，taskConfig: 任务参数
 export const analyze = async (rawData, taskConfig) => {
-  const prompt = rawData.map(item => item.title + "\n" + (item.content || "")).join("\n\n");
+  // 只拼接 title
+  const prompt = rawData.map(item => item.title).join("\n\n");
   const completion = await openai.chat.completions.create({
     messages: [
-      { role: "system", content: "你是一个新闻分析助手，请对以下新闻内容进行结构化摘要和要点提取。" },
+      { role: "system", content: "你是一个新闻分析助手，请对以下新闻标题进行结构化摘要和要点提取。" },
       { role: "user", content: prompt }
     ],
     model: "deepseek-chat", // 或 deepseek-reasoner
