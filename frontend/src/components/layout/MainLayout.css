@@ -105,6 +105,35 @@
 }
 
 /* 响应式设计：平板和手机 */
+@media (max-width: 1200px) {
+  .main-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    box-shadow: none;
+    border-bottom: 1px solid #e0e7ef;
+  }
+
+  .content {
+    flex: none;
+    width: 100%;
+    padding: 24px;
+    gap: 20px;
+  }
+
+  .control-panel,
+  .chat-summary,
+  .summary-area {
+    width: 100%;
+  }
+
+  .chat-summary {
+    flex-direction: column;
+  }
+}
+
 @media (max-width: 900px) {
   .main-layout {
     flex-direction: column;
@@ -163,29 +192,20 @@
   }
 
   .content {
-    padding: 6px 2px;
-    gap: 8px;
-    /* 调整小屏间距 */
+    padding: 12px;
+    gap: 12px;
   }
 
-  .control-panel,
-  .chat-container,
-  .history-panel,
-  .summary-area {
-    padding: 10px 6px;
-    border-radius: 8px;
-    font-size: 15px;
+  .control-panel {
+    padding: 12px;
+    gap: 12px;
   }
-
-  .control-panel {}
 
   .chat-summary {
-    flex-direction: column;
-    gap: 8px;
+    gap: 12px;
   }
 
   .summary-area {
-    padding: 8px 4px;
-    font-size: 14px;
+    padding: 12px;
   }
 }

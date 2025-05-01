@@ -134,7 +134,8 @@ const ControlPanel = ({ config, onConfigChange, onHistoryRefresh }) => {
 					name="interval"
 					value={String(config.interval)} // 保证 value 是字符串
 					onChange={handleChange}
-				>
+        >
+          <option value="1">1分钟</option>
 					<option value="15">15分钟</option>
 					<option value="30">30分钟</option>
 					<option value="60">1小时</option>
