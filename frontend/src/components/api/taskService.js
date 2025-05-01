@@ -42,3 +42,9 @@ export const getTaskResult = async (id) => {
 	const response = await axios.get(`${API_BASE}/${id}/result`);
 	return response.data;
 };
+
+// 立即执行一次任务
+export const executeTaskOnce = async (id) => {
+	const response = await axios.post(`${API_BASE}/${id}/execute`);
+	return response.data;
+};

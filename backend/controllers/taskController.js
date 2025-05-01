@@ -61,11 +61,12 @@ export const getTaskResult = async (req, res, next) => {
 	}
 };
 
+// 立即执行一次任务（爬取 + 分析）
 export const executeTaskOnce = async (req, res, next) => {
-  try {
-    const result = await taskService.executeTaskOnce(req.params.id);
-    res.json(result);
-  } catch (err) {
-    next(err);
-  }
+	try {
+		const result = await taskService.executeTaskOnce(req.params.id);
+		res.json(result);
+	} catch (err) {
+		next(err);
+	}
 };

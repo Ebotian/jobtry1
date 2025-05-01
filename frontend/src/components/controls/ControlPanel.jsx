@@ -64,11 +64,15 @@ const ControlPanel = ({ config, onConfigChange }) => {
 					id="manual-crawl"
 					className="manual-crawl-btn"
 					onClick={async () => {
-						// 1. 保存参数
-						const task = await taskService.createOrUpdateTask(config);
-						// 2. 立即执行
-						await axios.post(`/api/tasks/${task._id}/execute`);
-						alert("已立即执行爬取任务！");
+						try {
+							// 1. 保存参数并获取任务
+							const task = await taskService.createOrUpdateTask(config);
+							// 2. 立即执行
+							await taskService.executeTaskOnce(task._id);
+							alert("已立即执行爬取任务！");
+						} catch (err) {
+							alert("手动爬取失败！");
+						}
 					}}
 				>
 					手动爬取

@@ -51,21 +51,21 @@ export const getTaskResult = async (id) => {
 	return task.result || {};
 };
 
-// 立即执行一次任务
+// 立即执行一次任务：爬取 + AI 分析，并写入数据库
 export const executeTaskOnce = async (id) => {
-  const task = await Task.findById(id);
-  if (!task) throw new Error("Task not found");
-  // 爬取
-  const rawData = await crawlerService.crawl(task.config);
-  // AI分析
-  const aiResult = await aiService.analyze(rawData, task.config);
-  task.result = {
-    news: rawData,
-    ai: aiResult.content || aiResult,
-    runAt: new Date(),
-    error: null,
-  };
-  task.status = "pending";
-  await task.save();
-  return { message: "Task executed once" };
+	const task = await Task.findById(id);
+	if (!task) throw new Error("Task not found");
+	// 爬取数据
+	const rawData = await crawlerService.crawl(task.config);
+	// AI 分析
+	const aiResult = await aiService.analyze(rawData, task.config);
+	task.result = {
+		news: rawData,
+		ai: aiResult.content || aiResult,
+		runAt: new Date(),
+		error: null,
+	};
+	task.status = "pending";
+	await task.save();
+	return { message: "Task executed once" };
 };
