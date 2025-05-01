@@ -11,18 +11,28 @@ const ControlPanel = ({ config, onConfigChange, onHistoryRefresh }) => {
 		config.analysisKeyword || ""
 	);
 	const debounceRef = useRef(null);
-	const [enableScheduler, setEnableScheduler] = useState(true);
-	const [countdown, setCountdown] = useState(config.interval * 60 || 0);
+	const [enableScheduler, setEnableScheduler] = useState(() => {
+		const saved = localStorage.getItem("enableScheduler");
+		return saved === null ? true : saved === "true";
+	});
+	const [countdown, setCountdown] = useState(() => {
+		const saved = localStorage.getItem("schedulerCountdown");
+		return saved !== null ? Number(saved) : config.interval * 60 || 0;
+	});
 	const countdownRef = useRef();
 
 	// 定时倒计时逻辑
 	useEffect(() => {
+		localStorage.setItem("enableScheduler", enableScheduler);
+	}, [enableScheduler]);
+
+	useEffect(() => {
 		if (!enableScheduler) {
 			setCountdown(0);
+			localStorage.setItem("schedulerCountdown", "0");
 			if (countdownRef.current) clearInterval(countdownRef.current);
 			return;
 		}
-		setCountdown(config.interval * 60);
 		if (countdownRef.current) clearInterval(countdownRef.current);
 		countdownRef.current = setInterval(async () => {
 			setCountdown((prev) => {
@@ -37,8 +47,13 @@ const ControlPanel = ({ config, onConfigChange, onHistoryRefresh }) => {
 							alert("定时爬取失败！");
 						}
 					})();
+					localStorage.setItem(
+						"schedulerCountdown",
+						String(config.interval * 60)
+					);
 					return config.interval * 60;
 				}
+				localStorage.setItem("schedulerCountdown", String(prev - 1));
 				return prev - 1;
 			});
 		}, 1000);
@@ -55,6 +70,13 @@ const ControlPanel = ({ config, onConfigChange, onHistoryRefresh }) => {
 			[name]: name === "interval" ? Number(value) : value,
 		};
 		if (onConfigChange) onConfigChange(newConfig);
+		// 如果是 interval 或 site 变更，重置倒计时并持久化
+		if (name === "interval" || name === "site") {
+			const newCountdown =
+				name === "interval" ? Number(value) * 60 : newConfig.interval * 60 || 0;
+			setCountdown(newCountdown);
+			localStorage.setItem("schedulerCountdown", String(newCountdown));
+		}
 		try {
 			await taskService.createOrUpdateTask(newConfig);
 			onHistoryRefresh && onHistoryRefresh();
