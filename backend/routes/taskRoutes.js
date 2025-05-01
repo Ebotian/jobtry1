@@ -5,9 +5,10 @@ import {
 	getTaskById,
 	startTask,
 	stopTask,
-  getTaskResult,
-  executeTaskOnce,
+	getTaskResult,
+	executeTaskOnce,
 } from "../controllers/taskController.js";
+import { chat } from "../controllers/chatController.js";
 
 const router = Router();
 
@@ -25,5 +26,7 @@ router.post("/:id/stop", stopTask);
 router.get("/:id/result", getTaskResult);
 // 立即执行一次任务
 router.post("/:id/execute", executeTaskOnce);
+// 聊天接口
+router.post("/chat", chat);
 
 export default router;

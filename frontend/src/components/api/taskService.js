@@ -48,3 +48,9 @@ export const executeTaskOnce = async (id) => {
 	const response = await axios.post(`${API_BASE}/${id}/execute`);
 	return response.data;
 };
+
+// 聊天接口
+export const chatWithDeepseek = async (context, input) => {
+	const response = await axios.post(`/api/tasks/chat`, { context, input });
+	return response.data.reply;
+};

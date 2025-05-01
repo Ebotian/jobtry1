@@ -13,7 +13,9 @@ export const analyze = async (rawData, taskConfig) => {
 		messages: [
 			{
 				role: "system",
-				content: `你是一个新闻分析助手，请主要围绕“${taskConfig.analysisKeyword || '无关键词'}”进行结构化摘要和要点提取。`,
+				content: `你是一个新闻分析助手，请主要围绕“${
+					taskConfig.analysisKeyword || "无关键词"
+				}”进行结构化摘要和要点提取。`,
 			},
 			{ role: "user", content: prompt },
 		],
@@ -21,4 +23,17 @@ export const analyze = async (rawData, taskConfig) => {
 		...taskConfig, // 可扩展参数
 	});
 	return completion.choices[0].message; // 返回AI分析结果
+};
+
+// 用于聊天的 deepseek API 调用，支持上下文
+export const deepseekChat = async (contextMessages, userInput) => {
+	const messages = [
+		...contextMessages.slice(-4), // 最多保留4条历史
+		{ role: "user", content: userInput },
+	];
+	const completion = await openai.chat.completions.create({
+		messages,
+		model: "deepseek-chat",
+	});
+	return completion.choices[0].message.content;
 };

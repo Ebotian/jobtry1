@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./ControlPanel.css";
 import * as taskService from "../api/taskService";
+import Switch from "rc-switch";
+import "rc-switch/assets/index.css";
 
 const ControlPanel = ({ config, onConfigChange, onHistoryRefresh }) => {
 	const [loading, setLoading] = useState(false);
@@ -9,6 +11,41 @@ const ControlPanel = ({ config, onConfigChange, onHistoryRefresh }) => {
 		config.analysisKeyword || ""
 	);
 	const debounceRef = useRef(null);
+	const [enableScheduler, setEnableScheduler] = useState(true);
+	const [countdown, setCountdown] = useState(config.interval * 60 || 0);
+	const countdownRef = useRef();
+
+	// 定时倒计时逻辑
+	useEffect(() => {
+		if (!enableScheduler) {
+			setCountdown(0);
+			if (countdownRef.current) clearInterval(countdownRef.current);
+			return;
+		}
+		setCountdown(config.interval * 60);
+		if (countdownRef.current) clearInterval(countdownRef.current);
+		countdownRef.current = setInterval(async () => {
+			setCountdown((prev) => {
+				if (prev <= 1) {
+					// 倒计时归零时自动执行一次爬取
+					(async () => {
+						try {
+							const task = await taskService.createOrUpdateTask(config);
+							await taskService.executeTaskOnce(task._id);
+							onHistoryRefresh && onHistoryRefresh();
+						} catch (err) {
+							alert("定时爬取失败！");
+						}
+					})();
+					return config.interval * 60;
+				}
+				return prev - 1;
+			});
+		}, 1000);
+		return () => {
+			if (countdownRef.current) clearInterval(countdownRef.current);
+		};
+	}, [enableScheduler, config.interval]);
 
 	// 自动提交参数到后端 for select controls
 	const handleChange = async (e) => {
@@ -119,6 +156,23 @@ const ControlPanel = ({ config, onConfigChange, onHistoryRefresh }) => {
 				>
 					{loading ? "正在执行..." : "手动爬取"}
 				</button>
+			</div>
+			{/* 定时任务开关和倒计时，放最右侧 */}
+			<div className="control-group control-group-scheduler">
+				<label htmlFor="enableScheduler">定时任务</label>
+				<div className="scheduler-toggle-row">
+					<Switch
+						id="enableScheduler"
+						checked={enableScheduler}
+						onChange={setEnableScheduler}
+						className="scheduler-rc-switch"
+					/>
+					<span
+						className={`scheduler-countdown${!enableScheduler ? " off" : ""}`}
+					>
+						{enableScheduler ? `倒计时：${countdown} 秒` : "已关闭"}
+					</span>
+				</div>
 			</div>
 		</div>
 	);
