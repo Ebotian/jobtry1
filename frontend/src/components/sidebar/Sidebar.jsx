@@ -11,8 +11,9 @@ const scrollToSection = (id) => {
 
 const sectionMap = [
   { id: 'section-home', icon: <FaHome className="sidebar-icon" />, label: '首页' },
-  { id: 'section-analysis', icon: <FaChartBar className="sidebar-icon" />, label: '分析' },
   { id: 'section-history', icon: <FaHistory className="sidebar-icon" />, label: '历史' },
+  { id: 'section-analysis', icon: <FaChartBar className="sidebar-icon" />, label: '分析' },
+
 ];
 
 const Sidebar = () => {
