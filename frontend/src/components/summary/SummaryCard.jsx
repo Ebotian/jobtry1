@@ -1,16 +1,55 @@
-import React from 'react';
-import './SummaryCard.css';
+import React, { useState, useEffect } from "react";
+import * as taskService from "../api/taskService";
+import ReactMarkdown from "react-markdown";
+import "./SummaryCard.css";
 
-const SummaryCard = ({ summary }) => {
-  // 示例摘要内容
-  const displaySummary = summary || '暂无摘要，请先运行任务或等待AI分析结果...';
+const SummaryCard = ({ selectedTaskId }) => {
+	const [summary, setSummary] = useState("");
+	const [rawResult, setRawResult] = useState(null);
+	const [showRaw, setShowRaw] = useState(false);
 
-  return (
-    <div className="summary-root">
-      <h3 className="summary-title">AI分析摘要</h3>
-      <div className="summary-content">{displaySummary}</div>
-    </div>
-  );
+	useEffect(() => {
+		const fetchSummary = async () => {
+			try {
+				if (!selectedTaskId) return;
+				const result = await taskService.getTaskResult(selectedTaskId);
+				setSummary(result.ai || result.summary || "");
+				setRawResult(result);
+			} catch (err) {
+				console.error("获取摘要失败", err);
+			}
+		};
+		fetchSummary();
+	}, [selectedTaskId]);
+
+	const displaySummary = summary || "暂无摘要，请先运行任务或等待AI分析结果...";
+
+	return (
+		<div className="summary-root">
+			<h3 className="summary-title">AI分析摘要</h3>
+			<button className="summary-raw-btn" onClick={() => setShowRaw((v) => !v)}>
+				{showRaw ? "隐藏原始数据" : "查看原始数据"}
+			</button>
+			<div className="summary-content">
+				{showRaw && rawResult ? (
+					<pre
+						style={{
+							fontSize: "0.98em",
+							color: "#444",
+							background: "#f6f6f6",
+							borderRadius: 6,
+							padding: 10,
+							overflowX: "auto",
+						}}
+					>
+						{JSON.stringify(rawResult, null, 2)}
+					</pre>
+				) : (
+					<ReactMarkdown>{displaySummary}</ReactMarkdown>
+				)}
+			</div>
+		</div>
+	);
 };
 
 export default SummaryCard;

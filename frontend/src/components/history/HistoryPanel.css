@@ -3,6 +3,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  /* 确保填充父容器并允许列表滚动 */
 }
 
 .history-title {
@@ -17,6 +18,10 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+  flex: 1;
+  /* 占满剩余高度 */
+  overflow-y: auto;
+  /* 启用垂直滚动 */
 }
 
 .history-item {
@@ -25,10 +30,19 @@
   box-shadow: 0 1px 6px rgba(44, 62, 80, 0.06);
   padding: 12px 14px;
   transition: box-shadow 0.18s;
+  cursor: pointer;
+  /* 可点击 */
 }
 
 .history-item:hover {
   box-shadow: 0 4px 16px rgba(44, 62, 80, 0.13);
+}
+
+.history-item.selected {
+  background: #e0e7ef;
+  /* 选中背景 */
+  border-left: 4px solid #232946;
+  /* 选中指示条 */
 }
 
 .history-meta {

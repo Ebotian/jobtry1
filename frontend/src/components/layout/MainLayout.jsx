@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import "./MainLayout.css";
 import Sidebar from "../sidebar/Sidebar";
 import ControlPanel from "../controls/ControlPanel";
 import ChatContainer from "../chat/ChatContainer";
 import SummaryCard from "../summary/SummaryCard";
 import HistoryPanel from "../history/HistoryPanel";
-import { useState } from "react";
 
 const defaultConfig = {
 	analysisKeyword: "",
@@ -15,6 +14,10 @@ const defaultConfig = {
 
 const MainLayout = () => {
 	const [taskConfig, setTaskConfig] = useState(defaultConfig);
+	// 用于触发 HistoryPanel 刷新
+	const [historyRefreshKey, setHistoryRefreshKey] = useState(0);
+
+	const [selectedTaskId, setSelectedTaskId] = useState(null);
 
 	return (
 		<div className="main-layout">
@@ -26,7 +29,11 @@ const MainLayout = () => {
 			<main className="content">
 				{/* 顶部：任务参数配置 */}
 				<section className="control-panel" id="section-home">
-					<ControlPanel config={taskConfig} onConfigChange={setTaskConfig} />
+					<ControlPanel
+						config={taskConfig}
+						onConfigChange={setTaskConfig}
+						onHistoryRefresh={() => setHistoryRefreshKey((prev) => prev + 1)}
+					/>
 				</section>
 				{/* 中部：聊天界面 */}
 				<section className="chat-summary" id="section-analysis">
@@ -34,12 +41,16 @@ const MainLayout = () => {
 						<ChatContainer config={taskConfig} onConfigChange={setTaskConfig} />
 					</div>
 					<div className="history-panel" id="section-history">
-						<HistoryPanel />
+						<HistoryPanel
+							onSelect={setSelectedTaskId}
+							selectedId={selectedTaskId}
+							refreshKey={historyRefreshKey}
+						/>
 					</div>
 				</section>
 				{/* 底部：摘要区域 */}
 				<section className="summary-area">
-					<SummaryCard />
+					<SummaryCard selectedTaskId={selectedTaskId} />
 				</section>
 				{/* 设置区域预留 */}
 				<section style={{ display: "none" }} id="section-settings"></section>

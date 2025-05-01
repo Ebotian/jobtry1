@@ -1,31 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./HistoryPanel.css";
+import * as taskService from "../api/taskService";
 
-// 示例历史数据
-const sampleHistory = [
-	{
-		time: "",
-		type: "",
-		keyword: "",
-		summary: "暂无历史记录",
-	},
-];
+const HistoryPanel = ({ onSelect, selectedId }) => {
+	const [tasks, setTasks] = useState([]);
 
-const HistoryPanel = () => {
-	const [history] = useState(sampleHistory);
+	useEffect(() => {
+		const fetchTasks = async () => {
+			try {
+				const all = await taskService.getTasks();
+				setTasks(all);
+				// 默认选中最新
+				if (all.length > 0 && onSelect) {
+					onSelect(selectedId || all[all.length - 1]._id);
+				}
+			} catch (err) {
+				console.error("获取历史记录失败", err);
+			}
+		};
+		fetchTasks();
+	}, []);
 
 	return (
 		<div className="history-root">
 			<h3 className="history-title">任务历史记录</h3>
 			<div className="history-list">
-				{history.map((item, idx) => (
-					<div className="history-item" key={idx}>
+				{tasks.map((item) => (
+					<div
+						className={`history-item${
+							item._id === selectedId ? " selected" : ""
+						}`}
+						key={item._id}
+						onClick={() => onSelect && onSelect(item._id)}
+					>
 						<div className="history-meta">
-							<span className="history-time">{item.time}</span>
-							<span className="history-type">{item.type}</span>
-							<span className="history-keyword">关键词: {item.keyword}</span>
+							<span className="history-time">
+								{new Date(item.createdAt).toLocaleString()}
+							</span>
+							<span className="history-keyword">
+								关键词: {item.config.analysisKeyword || "无"}
+							</span>
 						</div>
-						<div className="history-summary">{item.summary}</div>
 					</div>
 				))}
 			</div>

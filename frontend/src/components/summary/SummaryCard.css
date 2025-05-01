@@ -25,6 +25,25 @@
   word-break: break-all;
 }
 
+.summary-raw-btn {
+  align-self: flex-end;
+  margin-bottom: 8px;
+  padding: 6px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #232946;
+  color: #fff;
+  font-size: 0.98rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+
+.summary-raw-btn:hover {
+  background: #3b4a6b;
+  color: #ffd803;
+}
+
 @media (max-width: 600px) {
   .summary-title {
     font-size: 1rem;
