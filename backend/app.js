@@ -1,5 +1,4 @@
-import dotenv from "dotenv";
-dotenv.config();
+import "./loadEnv.js";
 import express from "express";
 import "./config/db.js";
 import taskRoutes from "./routes/taskRoutes.js";
