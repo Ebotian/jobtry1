@@ -34,6 +34,7 @@
   background: #f8fafc;
   transition: border 0.2s;
   outline: none;
+  color: #232946; /* 深色字体，确保可见 */
 }
 
 .control-group input:focus,

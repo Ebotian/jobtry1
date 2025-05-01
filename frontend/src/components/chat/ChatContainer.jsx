@@ -1,14 +1,17 @@
 import React, { useRef, useState, useEffect } from 'react';
 import './ChatContainer.css';
 import * as taskService from '../api/taskService';
+import ReactMarkdown from 'react-markdown';
+import { parseConfigCommand } from '../api/nlpParser';
 
 const INIT_MSG = [
   { role: 'ai', text: '您好！请在下方输入您的问题或需求。' }
 ];
 
-const ChatContainer = () => {
+const ChatContainer = ({ config, onConfigChange }) => {
   const [messages, setMessages] = useState(INIT_MSG);
   const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
   const messagesBoxRef = useRef(null);
 
   // 只让消息框内部滚动到底部
@@ -24,6 +27,17 @@ const ChatContainer = () => {
       ...prev,
       { role: 'user', text: input }
     ]);
+      // NLP解析
+    const nlpResult = parseConfigCommand(input);
+    if (nlpResult && onConfigChange) {
+    onConfigChange({ ...config, [nlpResult.field]: nlpResult.value });
+    setMessages(prev => [
+      ...prev,
+      { role: 'ai', text: `已将${nlpResult.field}设置为${nlpResult.value}` }
+    ]);
+    setInput('');
+    return;
+    }
     setInput('');
     try {
       // 假设任务ID为 'default'，可根据实际情况调整
@@ -63,7 +77,7 @@ const ChatContainer = () => {
               key={idx}
               className={`chat-bubble ${msg.role === 'user' ? 'user' : 'ai'}`}
             >
-              <span>{msg.text}</span>
+              <ReactMarkdown>{msg.text}</ReactMarkdown>
             </div>
           ))
         )}

@@ -43,7 +43,7 @@
   gap: 24px;
 }
 
-/* 聊天与摘要区域 */
+/* 聊天与历史记录区域 */
 .chat-summary {
   display: flex;
   gap: 24px;
@@ -51,34 +51,6 @@
 }
 
 .chat-container {
-  flex: 2;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(44, 62, 80, 0.07);
-  padding: 24px 20px;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.summary-card {
-  flex: 1;
-  background: #f4f6fb;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(44, 62, 80, 0.05);
-  padding: 24px 20px;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-/* 数据可视化与历史记录 */
-.charts-history {
-  display: flex;
-  gap: 24px;
-}
-
-.chart-container {
   flex: 2;
   background: #fff;
   border-radius: 12px;
@@ -100,11 +72,30 @@
   flex-direction: column;
 }
 
+/* 摘要区域 */
+.summary-area {
+  margin-top: 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(44, 62, 80, 0.07);
+  padding: 24px 20px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 移除可视化相关样式 */
+.charts-history,
+.chart-container {
+  display: none !important;
+}
+
 /* 响应式设计：平板和手机 */
 @media (max-width: 900px) {
   .main-layout {
     flex-direction: column;
   }
+
   .sidebar {
     width: 100%;
     min-width: 0;
@@ -113,13 +104,30 @@
     box-shadow: none;
     border-bottom: 1px solid #e0e7ef;
   }
+
   .content {
     padding: 12px 4px;
   }
-  .chat-summary,
-  .charts-history {
+
+  .chat-summary {
     flex-direction: column;
     gap: 12px;
+  }
+
+  .summary-area {
+    order: 2;
+    margin-top: 0;
+    padding: 10px 6px;
+    border-radius: 8px;
+    font-size: 15px;
+  }
+
+  .chat-container {
+    order: 0;
+  }
+
+  .history-panel {
+    order: 1;
   }
 }
 
@@ -128,6 +136,7 @@
     flex-direction: column;
     height: auto;
   }
+
   .sidebar {
     width: 100%;
     min-width: 0;
@@ -137,24 +146,31 @@
     box-shadow: none;
     border-bottom: 1px solid #e0e7ef;
   }
+
   .content {
     padding: 6px 2px;
   }
+
   .control-panel,
   .chat-container,
-  .summary-card,
-  .chart-container,
   .history-panel {
     padding: 10px 6px;
     border-radius: 8px;
     font-size: 15px;
   }
+
   .control-panel {
     margin-bottom: 10px;
   }
-  .chat-summary,
-  .charts-history {
+
+  .chat-summary {
     flex-direction: column;
     gap: 8px;
+  }
+
+  .summary-area {
+    padding: 8px 4px;
+    border-radius: 8px;
+    font-size: 14px;
   }
 }

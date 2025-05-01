@@ -2,8 +2,10 @@
 .chat-root {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  min-height: 320px;
+  height: auto;
+  /* 原为100%，改为自适应 */
+  min-height: 150px;
+  /* 适当减小最小高度 */
   background: transparent;
   /* 关键：确保父容器撑满可用空间 */
 }
@@ -43,11 +45,12 @@
   overflow-y: auto;
   background: transparent;
   min-height: 0;
-  height: 100%;
-  /* 新增，防止清空后塌陷 */
-  min-height: 120px;
-  /* 新增，确保无消息时区域有最小高度 */
-  max-height: 100%;
+  height: auto;
+  /* 原为100%，改为自适应 */
+  min-height: 60px;
+  /* 适当减小最小高度 */
+  max-height: 320px;
+  /* 限制最大高度，超出滚动 */
 }
 
 .chat-empty {
@@ -60,10 +63,13 @@
 .chat-bubble {
   display: inline-block;
   max-width: 75%;
-  padding: 10px 16px;
+  padding: 3px 12px;
+  /* 减小内边距 */
   border-radius: 18px;
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 0.97rem;
+  /* 略微减小字体 */
+  line-height: 1.4;
+  /* 减小行高 */
   word-break: break-word;
   box-shadow: 0 1px 4px rgba(44, 62, 80, 0.08);
   margin-bottom: 2px;
