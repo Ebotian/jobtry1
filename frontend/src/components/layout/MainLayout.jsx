@@ -1,71 +1,62 @@
-import React, { useState } from 'react';
-import Sidebar from './Sidebar';
-import ChatContainer from '../chat/ChatContainer';
-import ChartContainer from '../charts/ChartContainer';
-import SummaryCard from '../summary/SummaryCard';
-import ControlPanel from '../controls/ControlPanel';
-import LoginPopup from '../login/LoginPopup';
+import React, { useState } from "react";
+import "./MainLayout.css";
+import Sidebar from "../sidebar/Sidebar";
+import ControlPanel from "../controls/ControlPanel";
+import ChatContainer from "../chat/ChatContainer";
+import SummaryCard from "../summary/SummaryCard";
+import HistoryPanel from "../history/HistoryPanel";
 
-// 导入状态管理钩子
-import useChatStore from '../../store/chatStore';
+const defaultConfig = {
+	analysisKeyword: "",
+	interval: 60,
+	site: "thepaper.cn",
+};
 
-/**
- * MainLayout组件 - 应用程序的主要布局容器
- *
- * 负责管理整体页面布局，包括侧边栏和主内容区域
- * 将应用程序分为左右两个主要部分，并在右侧内容区排列各功能组件
- *
- * @returns {JSX.Element} 应用程序的主布局组件
- */
 const MainLayout = () => {
-  // 从状态管理中获取所需数据 - 使用单独的选择器避免创建新对象
-  const aiSummary = useChatStore(state => state.summary);
-  const isGeneratingSummary = useChatStore(state => state.isGeneratingSummary);
+	const [taskConfig, setTaskConfig] = useState(defaultConfig);
+	// 用于触发 HistoryPanel 刷新
+	const [historyRefreshKey, setHistoryRefreshKey] = useState(0);
 
-  // 使用本地状态管理图表数据，避免测试数据在组件中硬编码
-  const [chartData, setChartData] = useState({
-    wordCloudData: [],
-    mermaidDefinition: `
-      graph TD
-        A[数据源] -->|处理| B(分析)
-        B --> C{结果}
-        C -->|待生成| D[图表]
-    `
-  });
+	const [selectedTaskId, setSelectedTaskId] = useState(null);
 
-  const [isLoginOpen, setLoginOpen] = useState(false);
-
-  // 创意性状态提升到 MainLayout
-  const [creativity, setCreativity] = useState(50);
-
-  return (
-    <div className="app-layout">
-      {/* 左侧侧边栏 */}
-      <Sidebar onLoginClick={() => setLoginOpen(true)} />
-
-      {/* 右侧内容区域 */}
-      <div className="content">
-        {/* 聊天界面 */}
-        <ChatContainer creativity={creativity} />
-
-        {/* 摘要卡片 - 使用新创建的SummaryCard组件 */}
-        <SummaryCard
-          summary={aiSummary || '等待分析...'}
-          loading={isGeneratingSummary|| false}
-        />
-
-        {/* 数据可视化区域 */}
-        <ChartContainer
-            wordCloudData={chartData.wordCloudData}
-            mermaidDefinition={chartData.mermaidDefinition}
-        />
-
-        {/* 控制面板 */}
-        <ControlPanel creativity={creativity} setCreativity={setCreativity} />
-      </div>
-      <LoginPopup isOpen={isLoginOpen} onClose={() => setLoginOpen(false)} />
-    </div>
-  );
+	return (
+		<div className="main-layout">
+			{/* 左侧侧边栏 */}
+			<aside className="sidebar">
+				<Sidebar />
+			</aside>
+			{/* 主内容区域 */}
+			<main className="content">
+				{/* 顶部：任务参数配置 */}
+				<section className="control-panel" id="section-home">
+					<ControlPanel
+						config={taskConfig}
+						onConfigChange={setTaskConfig}
+						onHistoryRefresh={() => setHistoryRefreshKey((prev) => prev + 1)}
+					/>
+				</section>
+				{/* 中部：聊天界面 */}
+				<section className="chat-summary" id="section-analysis">
+					<div className="chat-container">
+						<ChatContainer config={taskConfig} onConfigChange={setTaskConfig} />
+					</div>
+					<div className="history-panel" id="section-history">
+						<HistoryPanel
+							onSelect={setSelectedTaskId}
+							selectedId={selectedTaskId}
+							refreshKey={historyRefreshKey}
+						/>
+					</div>
+				</section>
+				{/* 底部：摘要区域 */}
+				<section className="summary-area">
+					<SummaryCard selectedTaskId={selectedTaskId} />
+				</section>
+				{/* 设置区域预留 */}
+				<section style={{ display: "none" }} id="section-settings"></section>
+			</main>
+		</div>
+	);
 };
 
 export default MainLayout;

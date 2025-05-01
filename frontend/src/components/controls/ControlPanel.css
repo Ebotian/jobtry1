@@ -1,0 +1,169 @@
+.control-panel-root {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 32px;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-width: 0;
+  margin-bottom: 6px;
+}
+
+.control-group:not(:last-child) {
+  margin-right: 0;
+}
+
+.control-group label {
+  font-size: 1rem;
+  color: #232946;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.control-group input,
+.control-group select {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #f8fafc;
+  transition: border 0.2s;
+  outline: none;
+  color: #232946;
+  /* 深色字体，确保可见 */
+}
+
+.control-group input:focus,
+.control-group select:focus {
+  border: 1.5px solid #3b4a6b;
+  background: #fff;
+}
+
+.manual-crawl-btn {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #232946;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+  height: 38px;
+  /* 与其他输入框保持一致高度 */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.manual-crawl-btn:hover {
+  background: #3b4a6b;
+}
+
+/* 定时任务开关组 */
+.control-group-scheduler {
+  flex: 0 0 auto;
+  /* 固定宽度 */
+  min-width: 260px;
+  /* 预留足够空间 */
+}
+
+.control-group-scheduler label {
+  margin-bottom: 4px;
+}
+
+.scheduler-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* rc-switch 尺寸和位置调整 */
+.scheduler-rc-switch.rc-switch {
+  width: 40px !important;
+  height: 20px !important;
+  background-color: #d1d5db !important;
+  border-radius: 10px !important;
+}
+
+.scheduler-rc-switch .rc-switch-handle {
+  width: 20px !important;
+  height: 20px !important;
+  top: 0px !important;
+  left: 0px !important;
+}
+
+.scheduler-rc-switch.rc-switch-checked .rc-switch-handle {
+  left: 20px !important;
+}
+
+.scheduler-rc-switch .rc-switch-inner {
+  display: none !important;
+}
+
+/* 倒计时样式统一为输入框风格 */
+.scheduler-countdown {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #f8fafc;
+  color: #232946;
+  font-size: 1rem;
+  min-width: 160px;
+  text-align: center;
+}
+
+.scheduler-countdown.off {
+  background: #f4f6fb;
+  color: #6c7a89;
+}
+
+.scheduler-rc-switch.rc-switch-checked {
+  background-color: #232946 !important;
+}
+
+@media (max-width: 1100px) {
+  .control-panel-root {
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: stretch;
+  }
+}
+
+@media (max-width: 900px) {
+  .control-panel-root {
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: stretch;
+  }
+
+  .control-group {
+    min-width: 120px;
+  }
+
+  .manual-crawl-btn {
+    margin-left: 0;
+    margin-top: 10px;
+    width: 100%;
+    font-size: 0.98rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .control-panel-root {
+    flex-direction: column;
+    gap: 8px;
+    flex-wrap: nowrap;
+    justify-content: stretch;
+  }
+
+  .control-group {
+    min-width: 0;
+    width: 100%;
+  }
+}

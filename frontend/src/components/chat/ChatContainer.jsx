@@ -1,84 +1,96 @@
-import React, { useState, useRef, useEffect } from 'react';
-import ChatHeader from './ChatHeader';
-import MessageList from './MessageList';
-import ChatInput from './ChatInput';
-import useChatStore from '../../store/chatStore';
-import '../chat/Chat.css';
+import React, { useRef, useState, useEffect } from "react";
+import "./ChatContainer.css";
+import * as taskService from "../api/taskService";
+import ReactMarkdown from "react-markdown";
 
-/**
- * ChatContainer 组件 - 聊天界面的容器组件
- * 管理消息列表、消息输入和发送功能
- *
- * @param {Object} props - 组件属性
- * @param {number} props.creativity - 创造力参数
- * @returns {JSX.Element} 聊天容器组件
- */
-const ChatContainer = ({ creativity }) => {
-  // 使用全局状态管理
-  const { messages, isLoading, sendMessage } = useChatStore();
+const MAX_CONTEXT = 5;
 
-  // 本地状态管理
-  const [inputMessage, setInputMessage] = useState('');
+const ChatContainer = ({ config }) => {
+	const [messages, setMessages] = useState([]);
+	const [input, setInput] = useState("");
+	const [loading, setLoading] = useState(false);
+	const messagesBoxRef = useRef(null);
 
-  // 引用消息列表底部元素，用于自动滚动
-  const messageEndRef = useRef(null);
+	// 滚动到底部
+	useEffect(() => {
+		if (messagesBoxRef.current) {
+			messagesBoxRef.current.scrollTop = messagesBoxRef.current.scrollHeight;
+		}
+	}, [messages]);
 
-  /**
-   * 处理消息发送
-   * @param {string} content - 消息内容
-   */
-  const handleSendMessage = (content) => {
-    if (content.trim()) {
-      // 传递 creativity 参数到 sendMessage
-      sendMessage(content, { creativity });
-      // 清空输入框
-      setInputMessage('');
-    }
-  };
+	const handleSend = async () => {
+		if (!input.trim() || loading) return;
+		const userMsg = { role: "user", text: input };
+		// 只允许 user/assistant，兼容历史 ai
+		const context = messages.slice(-MAX_CONTEXT).map((m) => ({
+			role: m.role === "ai" ? "assistant" : m.role,
+			content: m.text,
+		}));
+		setMessages((prev) => [...prev, userMsg]);
+		setInput("");
+		setLoading(true);
+		try {
+			const reply = await taskService.chatWithDeepseek(context, input);
+			setMessages((prev) => [...prev, { role: "assistant", text: reply }]);
+		} catch (err) {
+			setMessages((prev) => [
+				...prev,
+				{ role: "assistant", text: "AI回复失败" },
+			]);
+		}
+		setLoading(false);
+	};
 
-  /**
-   * 处理输入变化
-   * @param {React.ChangeEvent<HTMLInputElement>} e - 输入事件
-   */
-  const handleInputChange = (e) => {
-    setInputMessage(e.target.value);
-  };
+	const handleKeyDown = (e) => {
+		if (e.key === "Enter") handleSend();
+	};
 
-  /**
-   * 滚动到消息列表底部
-   */
-  const scrollToBottom = () => {
-    if (messageEndRef.current) {
-      const messageListContainer = messageEndRef.current.parentElement;
-      if (messageListContainer) {
-        messageListContainer.scrollTop = messageListContainer.scrollHeight;
-      }
-    }
-  };
+	const handleClear = () => {
+		setMessages([]);
+	};
 
-  // 当消息列表更新时，滚动到底部
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  return (
-    <div className="chat-container">
-      <ChatHeader />
-      <div className="message-list">
-        <MessageList
-          messages={messages}
-          isLoading={isLoading}
-        />
-        <div ref={messageEndRef} />
-      </div>
-      <ChatInput
-        value={inputMessage}
-        onChange={handleInputChange}
-        onSend={handleSendMessage}
-        disabled={isLoading}
-      />
-    </div>
-  );
+	return (
+		<div className="chat-root">
+			<div className="chat-header">
+				<span>AI 聊天</span>
+				<button className="chat-clear-btn" onClick={handleClear}>
+					清空
+				</button>
+			</div>
+			<div className="chat-messages sms-style" ref={messagesBoxRef}>
+				{messages.length === 0 ? (
+					<div className="chat-empty">暂无消息</div>
+				) : (
+					messages.map((msg, idx) => (
+						<div
+							key={idx}
+							className={`chat-bubble ${msg.role === "user" ? "user" : "ai"}`}
+						>
+							<ReactMarkdown>{msg.text}</ReactMarkdown>
+						</div>
+					))
+				)}
+			</div>
+			<div className="chat-input-row">
+				<input
+					className="chat-input"
+					type="text"
+					placeholder="请输入您的问题..."
+					value={input}
+					onChange={(e) => setInput(e.target.value)}
+					onKeyDown={handleKeyDown}
+					disabled={loading}
+				/>
+				<button
+					className="chat-send-btn"
+					onClick={handleSend}
+					disabled={loading}
+				>
+					{loading ? "发送中..." : "发送"}
+				</button>
+			</div>
+		</div>
+	);
 };
 
 export default ChatContainer;
