@@ -1,5 +1,12 @@
 /* MainLayout.css */
 
+/* 全局或父级确保 box-sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 /* 主布局容器 */
 .main-layout {
   display: flex;
@@ -26,14 +33,16 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 32px 32px 24px 32px;
+  padding: 32px;
+  /* 统一内边距 */
   overflow-y: auto;
   min-width: 0;
+  gap: 24px;
+  /* 使用 gap 控制 section 间距 */
 }
 
 /* 顶部参数面板 */
 .control-panel {
-  margin-bottom: 24px;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(44, 62, 80, 0.07);
@@ -47,42 +56,34 @@
 .chat-summary {
   display: flex;
   gap: 24px;
-  margin-bottom: 24px;
 }
 
-.chat-container {
-  flex: 2;
+.chat-container,
+.history-panel,
+.summary-area {
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(44, 62, 80, 0.07);
   padding: 24px 20px;
+  /* 统一内边距 */
   min-width: 0;
   display: flex;
   flex-direction: column;
+}
+
+.chat-container {
+  flex: 2;
 }
 
 .history-panel {
   flex: 1;
   background: #f4f6fb;
-  border-radius: 12px;
+  /* 保持原有背景色 */
   box-shadow: 0 2px 12px rgba(44, 62, 80, 0.05);
-  padding: 24px 20px;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
 }
 
 /* 摘要区域 */
-.summary-area {
-  margin-top: 0;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(44, 62, 80, 0.07);
-  padding: 24px 20px;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
+.summary-area {}
 
 /* 移除可视化相关样式 */
 .charts-history,
@@ -107,6 +108,8 @@
 
   .content {
     padding: 12px 4px;
+    gap: 12px;
+    /* 调整竖屏间距 */
   }
 
   .chat-summary {
@@ -116,7 +119,6 @@
 
   .summary-area {
     order: 2;
-    margin-top: 0;
     padding: 10px 6px;
     border-radius: 8px;
     font-size: 15px;
@@ -149,19 +151,20 @@
 
   .content {
     padding: 6px 2px;
+    gap: 8px;
+    /* 调整小屏间距 */
   }
 
   .control-panel,
   .chat-container,
-  .history-panel {
+  .history-panel,
+  .summary-area {
     padding: 10px 6px;
     border-radius: 8px;
     font-size: 15px;
   }
 
-  .control-panel {
-    margin-bottom: 10px;
-  }
+  .control-panel {}
 
   .chat-summary {
     flex-direction: column;
@@ -170,7 +173,6 @@
 
   .summary-area {
     padding: 8px 4px;
-    border-radius: 8px;
     font-size: 14px;
   }
 }
