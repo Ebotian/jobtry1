@@ -6,20 +6,25 @@ const HistoryPanel = ({ onSelect, selectedId, refreshKey }) => {
 	const [results, setResults] = useState([]);
 
 	useEffect(() => {
+		let intervalId;
 		const fetchResults = async () => {
 			try {
 				const all = await taskService.getTaskResults();
 				setResults(all);
 				// 默认选中最新
-				if (onSelect) {
-					const firstId = all.length > 0 ? all[0]._id : null;
+				if (all.length > 0 && onSelect) {
+					const firstId = all[0]._id;
 					onSelect(firstId);
 				}
 			} catch (err) {
 				console.error("获取历史记录失败", err);
 			}
 		};
+		// 首次加载
 		fetchResults();
+		// 每15秒拉取一次
+		intervalId = setInterval(fetchResults, 15000);
+		return () => clearInterval(intervalId);
 	}, [refreshKey]);
 
 	return (
