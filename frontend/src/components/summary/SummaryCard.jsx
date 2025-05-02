@@ -12,9 +12,18 @@ const SummaryCard = ({ selectedTaskId }) => {
 		const fetchSummary = async () => {
 			try {
 				if (!selectedTaskId) return;
-				const result = await taskService.getTaskResult(selectedTaskId);
-				setSummary(result.ai || result.summary || "");
-				setRawResult(result);
+				// 查询历史结果集合
+				const all = await taskService.getTaskResults();
+				const resultDoc = all.find(
+					(r) => String(r._id) === String(selectedTaskId)
+				);
+				if (!resultDoc) {
+					setSummary("");
+					setRawResult(null);
+					return;
+				}
+				setSummary(resultDoc.result?.ai || resultDoc.result?.summary || "");
+				setRawResult(resultDoc.result);
 			} catch (err) {
 				console.error("获取摘要失败", err);
 			}

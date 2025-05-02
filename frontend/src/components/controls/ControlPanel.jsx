@@ -21,6 +21,22 @@ const ControlPanel = ({ config, onConfigChange, onHistoryRefresh }) => {
 	});
 	const countdownRef = useRef();
 
+	// 定时任务开关切换
+	const handleSchedulerToggle = async (checked) => {
+		setEnableScheduler(checked);
+		try {
+			// 先确保任务已存在并同步 enableScheduler 字段
+			const task = await taskService.createOrUpdateTask(config, checked);
+			if (checked) {
+				await taskService.startTask(task._id);
+			} else {
+				await taskService.stopTask(task._id);
+			}
+		} catch (err) {
+			// 可选：提示用户操作失败
+		}
+	};
+
 	// 定时倒计时逻辑
 	useEffect(() => {
 		localStorage.setItem("enableScheduler", enableScheduler);
@@ -34,29 +50,19 @@ const ControlPanel = ({ config, onConfigChange, onHistoryRefresh }) => {
 			return;
 		}
 		if (countdownRef.current) clearInterval(countdownRef.current);
-		countdownRef.current = setInterval(async () => {
+		// 初始化倒计时
+		setCountdown(config.interval * 60);
+		localStorage.setItem("schedulerCountdown", String(config.interval * 60));
+
+		// 视觉倒计时，无触发后端逻辑
+		countdownRef.current = setInterval(() => {
 			setCountdown((prev) => {
-				if (prev <= 1) {
-					// 倒计时归零时自动执行一次爬取
-					(async () => {
-						try {
-							const task = await taskService.createOrUpdateTask(config);
-							await taskService.executeTaskOnce(task._id);
-							onHistoryRefresh && onHistoryRefresh();
-						} catch (err) {
-							alert("定时爬取失败！");
-						}
-					})();
-					localStorage.setItem(
-						"schedulerCountdown",
-						String(config.interval * 60)
-					);
-					return config.interval * 60;
-				}
-				localStorage.setItem("schedulerCountdown", String(prev - 1));
-				return prev - 1;
+				const next = prev <= 1 ? config.interval * 60 : prev - 1;
+				localStorage.setItem("schedulerCountdown", String(next));
+				return next;
 			});
 		}, 1000);
+
 		return () => {
 			if (countdownRef.current) clearInterval(countdownRef.current);
 		};
@@ -134,8 +140,8 @@ const ControlPanel = ({ config, onConfigChange, onHistoryRefresh }) => {
 					name="interval"
 					value={String(config.interval)} // 保证 value 是字符串
 					onChange={handleChange}
-        >
-          <option value="1">1分钟</option>
+				>
+					<option value="1">1分钟</option>
 					<option value="15">15分钟</option>
 					<option value="30">30分钟</option>
 					<option value="60">1小时</option>
@@ -187,7 +193,7 @@ const ControlPanel = ({ config, onConfigChange, onHistoryRefresh }) => {
 					<Switch
 						id="enableScheduler"
 						checked={enableScheduler}
-						onChange={setEnableScheduler}
+						onChange={handleSchedulerToggle}
 						className="scheduler-rc-switch"
 					/>
 					<span

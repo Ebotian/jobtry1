@@ -7,6 +7,8 @@ import {
 	stopTask,
 	getTaskResult,
 	executeTaskOnce,
+	getTaskResults,
+	getLatestTaskResult,
 } from "../controllers/taskController.js";
 import { chat } from "../controllers/chatController.js";
 
@@ -16,6 +18,11 @@ const router = Router();
 router.post("/config", createTask);
 // 查询所有任务
 router.get("/", getTasks);
+// 历史结果API
+router.get("/results", getTaskResults);
+router.get("/results/latest", getLatestTaskResult);
+// 聊天接口
+router.post("/chat", chat);
 // 查询单个任务
 router.get("/:id", getTaskById);
 // 启动任务
@@ -26,7 +33,5 @@ router.post("/:id/stop", stopTask);
 router.get("/:id/result", getTaskResult);
 // 立即执行一次任务
 router.post("/:id/execute", executeTaskOnce);
-// 聊天接口
-router.post("/chat", chat);
 
 export default router;

@@ -3,12 +3,13 @@ import axios from "axios";
 const API_BASE = "/api/tasks";
 
 // 创建/更新任务配置
-export const createOrUpdateTask = async (config) => {
-	// 生成唯一任务名，建议用 site-分析关键词 组合
+export const createOrUpdateTask = async (config, enableScheduler) => {
 	const name = `${config.site}-${config.analysisKeyword || ""}`;
 	const response = await axios.post(`${API_BASE}/config`, {
 		name,
 		config,
+		enableScheduler:
+			typeof enableScheduler === "boolean" ? enableScheduler : true,
 	});
 	return response.data;
 };
@@ -43,6 +44,18 @@ export const getTaskResult = async (id) => {
 	return response.data;
 };
 
+// 获取所有历史结果（新接口）
+export const getTaskResults = async () => {
+	const response = await axios.get(`${API_BASE}/results`);
+	return response.data;
+};
+
+// 获取最新任务结果（新接口）
+export const getLatestTaskResult = async () => {
+	const response = await axios.get(`${API_BASE}/results/latest`);
+	return response.data;
+};
+
 // 立即执行一次任务
 export const executeTaskOnce = async (id) => {
 	const response = await axios.post(`${API_BASE}/${id}/execute`);
@@ -51,6 +64,6 @@ export const executeTaskOnce = async (id) => {
 
 // 聊天接口
 export const chatWithDeepseek = async (context, input) => {
-	const response = await axios.post(`/api/tasks/chat`, { context, input });
+	const response = await axios.post(`${API_BASE}/chat`, { context, input });
 	return response.data.reply;
 };

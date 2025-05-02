@@ -12,6 +12,7 @@ const TaskSchema = new mongoose.Schema({
 	createdAt: { type: Date, default: Date.now },
 	updatedAt: { type: Date, default: Date.now },
 	cron: { type: String, default: "0 * * * *" }, // 定时表达式，默认每小时
+	enableScheduler: { type: Boolean, default: true }, // 定时任务开关
 });
 
 TaskSchema.pre("save", function (next) {
