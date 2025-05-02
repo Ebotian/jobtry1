@@ -19,6 +19,16 @@ cd ..
 echo "=== 2. 安装 concurrently 工具 ==="
 npm install concurrently --save-dev
 
+echo "注意你必须配置好 .env 文件中的API，才能正常使用ai助手。"
+echo ".env文件位置:backend/.env"
+
+read -p "请确认已配置好 .env 文件，是否继续启动？(y/N): " confirm
+confirm=${confirm:-N}
+if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+    echo "已取消启动。请先配置好 .env 文件。"
+    exit 1
+fi
+
 echo "=== 3. 一键启动前后端（输出合并，Ctrl+C 可全部停止）==="
 npx concurrently -k -n BACKEND,FRONTEND -c yellow,cyan \
   "cd backend && npm install && node app.js" \

@@ -1,3 +1,3 @@
 DEEPSEEK_API_KEY=<你的deepseek api key>
-PUPPETEER_USE_PROXY=<你是否使用代理7890>
+PUPPETEER_USE_PROXY=<你是否使用代理7890?1:0  是的话填1,否则填0>
 MONGODB_URI=mongodb://localhost:27017/news_crawler
