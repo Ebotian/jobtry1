@@ -11,11 +11,6 @@ const HistoryPanel = ({ onSelect, selectedId, refreshKey }) => {
 			try {
 				const all = await taskService.getTaskResults();
 				setResults(all);
-				// 默认选中最新
-				if (all.length > 0 && onSelect) {
-					const firstId = all[0]._id;
-					onSelect(firstId);
-				}
 			} catch (err) {
 				console.error("获取历史记录失败", err);
 			}
