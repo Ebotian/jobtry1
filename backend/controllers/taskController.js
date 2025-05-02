@@ -1,4 +1,14 @@
 import * as taskService from "../services/taskService.js";
+import mongoose from "mongoose";
+
+// 历史结果模型
+const resultSchema = new mongoose.Schema({
+	config: Object,
+	result: Object,
+	createdAt: { type: Date, default: Date.now },
+});
+const TaskResult =
+	mongoose.models.TaskResult || mongoose.model("TaskResult", resultSchema);
 
 // 创建新任务
 export const createTask = async (req, res, next) => {
@@ -66,6 +76,30 @@ export const executeTaskOnce = async (req, res, next) => {
 	try {
 		const result = await taskService.executeTaskOnce(req.params.id);
 		res.json(result);
+	} catch (err) {
+		next(err);
+	}
+};
+
+// 获取所有历史结果
+export const getTaskResults = async (req, res, next) => {
+	try {
+		const results = await TaskResult.find({}).sort({ createdAt: -1 });
+		res.json(results);
+	} catch (err) {
+		next(err);
+	}
+};
+
+// 获取最新一条历史结果
+export const getLatestTaskResult = async (req, res, next) => {
+	try {
+		const latest = await TaskResult.findOne(
+			{},
+			{},
+			{ sort: { createdAt: -1 } }
+		);
+		res.json(latest ? latest.result : {});
 	} catch (err) {
 		next(err);
 	}

@@ -3,48 +3,52 @@ import "./HistoryPanel.css";
 import * as taskService from "../api/taskService";
 
 const HistoryPanel = ({ onSelect, selectedId, refreshKey }) => {
-	const [tasks, setTasks] = useState([]);
+	const [results, setResults] = useState([]);
 
 	useEffect(() => {
-		const fetchTasks = async () => {
+		let intervalId;
+		const fetchResults = async () => {
 			try {
-				const all = await taskService.getTasks();
-				setTasks(all);
+				const all = await taskService.getTaskResults();
+				setResults(all);
 				// 默认选中最新
 				if (all.length > 0 && onSelect) {
-					onSelect(selectedId || all[all.length - 1]._id);
+					const firstId = all[0]._id;
+					onSelect(firstId);
 				}
 			} catch (err) {
 				console.error("获取历史记录失败", err);
 			}
 		};
-		fetchTasks();
+		// 首次加载
+		fetchResults();
+		// 每15秒拉取一次
+		intervalId = setInterval(fetchResults, 15000);
+		return () => clearInterval(intervalId);
 	}, [refreshKey]);
 
 	return (
 		<div className="history-root">
 			<h3 className="history-title">任务历史记录</h3>
 			<div className="history-list">
-				{tasks
-					.filter((item) => item.result && Object.keys(item.result).length > 0)
-					.map((item) => (
-						<div
-							className={`history-item${
-								item._id === selectedId ? " selected" : ""
-							}`}
-							key={item._id}
-							onClick={() => onSelect && onSelect(item._id)}
-						>
-							<div className="history-meta">
-								<span className="history-time">
-									{new Date(item.createdAt).toLocaleString()}
-								</span>
-								<span className="history-keyword">
-									关键词: {item.config.analysisKeyword || "无"}
-								</span>
-							</div>
+				{results.map((item) => (
+					<div
+						className={`history-item${
+							item._id === selectedId ? " selected" : ""
+						}`}
+						key={item._id}
+						onClick={() => onSelect && onSelect(item._id)}
+					>
+						<div className="history-meta">
+							<span className="history-time">
+								{new Date(item.createdAt).toLocaleString()}
+							</span>
+							<span className="history-keyword">
+								关键词: {item.config?.analysisKeyword || "无"}
+							</span>
 						</div>
-					))}
+					</div>
+				))}
 			</div>
 		</div>
 	);
