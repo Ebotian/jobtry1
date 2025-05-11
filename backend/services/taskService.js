@@ -5,6 +5,7 @@ import * as aiService from "./aiService.js";
 import mongoose from "mongoose";
 
 // 新增结果模型
+//这个模型应该放在一个单独的文件中以便于其他服务也能使用
 const resultSchema = new mongoose.Schema({
 	config: Object,
 	result: Object,
